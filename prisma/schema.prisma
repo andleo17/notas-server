@@ -1,0 +1,155 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Faculty {
+  id      Int      @default(autoincrement()) @id
+  name    String   @unique
+  state   Boolean  @default(true)
+  schools School[]
+}
+
+model School {
+  id        Int      @default(autoincrement()) @id
+  name      String   @unique
+  state     Boolean  @default(true)
+  facultyId Int
+  faculty   Faculty  @relation(fields: [facultyId], references: [id])
+  users     User[]
+  courses   Course[]
+}
+
+model Semester {
+  id          Int          @default(autoincrement()) @id
+  name        String       @unique
+  startDate   DateTime?
+  finishDate  DateTime?
+  state       Boolean      @default(false)
+  users       User[]
+  groups      Group[]
+  enrollments Enrollment[]
+}
+
+model User {
+  id          Int          @default(autoincrement()) @id
+  nickname    String
+  password    String
+  email       String
+  name        String
+  lastname    String
+  birthDate   DateTime
+  photo       String
+  genre       Boolean
+  semesterId  Int
+  semester    Semester     @relation(fields: [semesterId], references: [id])
+  schoolId    Int
+  school      School       @relation(fields: [schoolId], references: [id])
+  enrollments Enrollment[]
+}
+
+model Course {
+  id            Int     @default(autoincrement()) @id
+  name          String
+  code          String  @unique
+  credits       Int
+  academicPhase Int
+  state         Boolean @default(true)
+  schoolId      Int
+  school        School  @relation(fields: [schoolId], references: [id])
+  groups        Group[]
+}
+
+model Teacher {
+  id       Int     @default(autoincrement()) @id
+  name     String
+  lastname String
+  state    Boolean
+  groups   Group[]
+}
+
+model Group {
+  id                Int                @default(autoincrement()) @id
+  denomination      String
+  courseId          Int
+  course            Course             @relation(fields: [courseId], references: [id])
+  teacherId         Int
+  teacher           Teacher            @relation(fields: [teacherId], references: [id])
+  semesterId        Int
+  semester          Semester           @relation(fields: [semesterId], references: [id])
+  enrollmentDetails EnrollmentDetail[]
+  activities        Activity[]
+  schedules         Schedule[]
+}
+
+model Enrollment {
+  id                Int                @default(autoincrement()) @id
+  weightedAverage   Int?
+  state             Boolean            @default(true)
+  userId            Int
+  user              User               @relation(fields: [userId], references: [id])
+  semesterId        Int
+  semester          Semester           @relation(fields: [semesterId], references: [id])
+  enrollmentDetails EnrollmentDetail[]
+}
+
+model EnrollmentDetail {
+  id           Int        @default(autoincrement()) @id
+  averageGrade Float?
+  state        Boolean
+  enrollmentId Int
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id])
+  groupId      Int
+  group        Group      @relation(fields: [groupId], references: [id])
+  grades       Grade[]
+}
+
+model TypeActivity {
+  id         Int        @default(autoincrement()) @id
+  name       String     @unique
+  activities Activity[]
+}
+
+model Activity {
+  id               Int          @default(autoincrement()) @id
+  name             String
+  weight           Float
+  presentationDate DateTime?
+  state            Boolean      @default(true)
+  typeActivityId   Int
+  typeActivity     TypeActivity @relation(fields: [typeActivityId], references: [id])
+  activityId       Int?
+  activity         Activity?    @relation("ActivityToActivity", fields: [activityId], references: [id])
+  groupId          Int
+  group            Group        @relation(fields: [groupId], references: [id])
+  activities       Activity[]   @relation("ActivityToActivity")
+  grades           Grade[]
+}
+
+model Grade {
+  id                 Int              @default(autoincrement()) @id
+  calification       Float?
+  confirmated        Boolean          @default(false)
+  state              Boolean          @default(true)
+  activityId         Int
+  activity           Activity         @relation(fields: [activityId], references: [id])
+  enrollmentDetailId Int
+  enrollmentDetail   EnrollmentDetail @relation(fields: [enrollmentDetailId], references: [id])
+}
+
+model Schedule {
+  id         Int      @default(autoincrement()) @id
+  day        Int
+  startHour  DateTime
+  finishHour DateTime
+  state      Boolean  @default(true)
+  groupId    Int
+  group      Group    @relation(fields: [groupId], references: [id])
+}
