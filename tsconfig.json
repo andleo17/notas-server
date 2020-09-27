@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"skipLibCheck": true,
+		"module": "CommonJS",
+		"removeComments": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"target": "ES2015",
+		"outDir": "dist",
+		"allowSyntheticDefaultImports": true,
+		"lib": ["ES2020", "ESNext"],
+		"esModuleInterop": true,
+		"typeRoots": ["node_modules/@types", "src/@types"]
+	},
+	"include": ["src/**/*.ts"],
+	"exclude": ["node_modules"]
+}
