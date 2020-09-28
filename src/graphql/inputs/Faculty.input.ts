@@ -1,8 +1,8 @@
 import { Field, InputType } from 'type-graphql';
-import { FacultyType } from '../types/Faculty.type';
+import FacultyType from '../types/Faculty.type';
 
 @InputType()
-export class FacultyInput implements Partial<FacultyType> {
+export default class FacultyInput implements Partial<FacultyType> {
 	@Field()
 	name: string;
 

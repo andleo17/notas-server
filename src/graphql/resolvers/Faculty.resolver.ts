@@ -9,12 +9,12 @@ import {
 	Root,
 } from 'type-graphql';
 import { Context } from '../../context';
-import { FacultyInput } from '../inputs/Faculty.input';
-import { FacultyType } from '../types/Faculty.type';
-import { SchoolType } from '../types/School.type';
+import FacultyInput from '../inputs/Faculty.input';
+import FacultyType from '../types/Faculty.type';
+import SchoolType from '../types/School.type';
 
 @Resolver((of) => FacultyType)
-export class FacultyResolver {
+export default class FacultyResolver {
 	@FieldResolver((returns) => [SchoolType])
 	async schools(
 		@Root() { id }: FacultyType,
