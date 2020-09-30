@@ -15,6 +15,9 @@ export default class GroupType implements Group {
 	@Field()
 	denomination: string;
 
+	@Field()
+	state: boolean;
+
 	@Field((type) => Int)
 	courseId: number;
 
