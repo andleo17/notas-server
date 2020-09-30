@@ -11,14 +11,14 @@ generator client {
 }
 
 model Faculty {
-  id      Int      @default(autoincrement()) @id
+  id      Int      @id @default(autoincrement())
   name    String   @unique
   state   Boolean  @default(true)
   schools School[]
 }
 
 model School {
-  id        Int      @default(autoincrement()) @id
+  id        Int      @id @default(autoincrement())
   name      String   @unique
   state     Boolean  @default(true)
   facultyId Int
@@ -28,7 +28,7 @@ model School {
 }
 
 model Semester {
-  id          Int          @default(autoincrement()) @id
+  id          Int          @id @default(autoincrement())
   name        String       @unique
   startDate   DateTime?
   finishDate  DateTime?
@@ -39,7 +39,7 @@ model Semester {
 }
 
 model User {
-  id          Int          @default(autoincrement()) @id
+  id          Int          @id @default(autoincrement())
   nickname    String
   password    String
   email       String
@@ -56,7 +56,7 @@ model User {
 }
 
 model Course {
-  id            Int     @default(autoincrement()) @id
+  id            Int     @id @default(autoincrement())
   name          String
   code          String  @unique
   credits       Int
@@ -68,15 +68,15 @@ model Course {
 }
 
 model Teacher {
-  id       Int     @default(autoincrement()) @id
+  id       Int     @id @default(autoincrement())
   name     String
   lastname String
-  state    Boolean
+  state    Boolean @default(true)
   groups   Group[]
 }
 
 model Group {
-  id                Int                @default(autoincrement()) @id
+  id                Int                @id @default(autoincrement())
   denomination      String
   courseId          Int
   course            Course             @relation(fields: [courseId], references: [id])
@@ -90,7 +90,7 @@ model Group {
 }
 
 model Enrollment {
-  id                Int                @default(autoincrement()) @id
+  id                Int                @id @default(autoincrement())
   weightedAverage   Int?
   state             Boolean            @default(true)
   userId            Int
@@ -101,9 +101,9 @@ model Enrollment {
 }
 
 model EnrollmentDetail {
-  id           Int        @default(autoincrement()) @id
+  id           Int        @id @default(autoincrement())
   averageGrade Float?
-  state        Boolean
+  state        Boolean    @default(true)
   enrollmentId Int
   enrollment   Enrollment @relation(fields: [enrollmentId], references: [id])
   groupId      Int
@@ -112,13 +112,13 @@ model EnrollmentDetail {
 }
 
 model TypeActivity {
-  id         Int        @default(autoincrement()) @id
+  id         Int        @id @default(autoincrement())
   name       String     @unique
   activities Activity[]
 }
 
 model Activity {
-  id               Int          @default(autoincrement()) @id
+  id               Int          @id @default(autoincrement())
   name             String
   weight           Float
   presentationDate DateTime?
@@ -134,7 +134,7 @@ model Activity {
 }
 
 model Grade {
-  id                 Int              @default(autoincrement()) @id
+  id                 Int              @id @default(autoincrement())
   calification       Float?
   confirmated        Boolean          @default(false)
   state              Boolean          @default(true)
@@ -145,7 +145,7 @@ model Grade {
 }
 
 model Schedule {
-  id         Int      @default(autoincrement()) @id
+  id         Int      @id @default(autoincrement())
   day        Int
   startHour  DateTime
   finishHour DateTime
