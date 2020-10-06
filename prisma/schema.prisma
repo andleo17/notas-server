@@ -127,10 +127,10 @@ model Activity {
   typeActivityId   Int
   typeActivity     TypeActivity @relation(fields: [typeActivityId], references: [id])
   activityId       Int?
-  activity         Activity?    @relation("ActivityToActivity", fields: [activityId], references: [id])
+  parentActivity   Activity?    @relation("ActivityToActivity", fields: [activityId], references: [id])
   groupId          Int
   group            Group        @relation(fields: [groupId], references: [id])
-  activities       Activity[]   @relation("ActivityToActivity")
+  childActivities  Activity[]   @relation("ActivityToActivity")
   grades           Grade[]
 }
 
