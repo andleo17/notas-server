@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx rimraf dist && npx tsc",
+    "build": "npx rimraf dist && npx -p typescript tsc",
     "serve": "node dist",
     "start": "npm run build && npm run serve",
     "test": "echo \"Error: no test specified\" && exit 1"
