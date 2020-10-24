@@ -14,6 +14,7 @@ import UserType from '../types/User.type';
 import SemesterType from '../types/Semester.type';
 import SchoolType from '../types/School.type';
 import EnrollmentType from '../types/Enrollment.type';
+import { empty } from '@prisma/client';
 
 @Resolver((of) => UserType)
 export default class UserResolver {
@@ -74,4 +75,21 @@ export default class UserResolver {
 			},
 		});
 	}
+
+	@Query((returns) => UserType)
+	async login(
+		@Arg('email', (type) => String) email: string,
+		@Arg('password', (type) => String) password: string,
+		@Ctx() { prisma }: Context
+
+	): Promise<UserType[]>{
+		const userLogin = await prisma.user.findMany({ where: { email : email, password: password} })
+
+		if(userLogin){
+			return userLogin;
+		}else{
+			empty
+		}
+	}
+	
 }
