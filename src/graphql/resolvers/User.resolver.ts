@@ -75,21 +75,5 @@ export default class UserResolver {
 			},
 		});
 	}
-
-	@Query((returns) => UserType)
-	async login(
-		@Arg('email', (type) => String) email: string,
-		@Arg('password', (type) => String) password: string,
-		@Ctx() { prisma }: Context
-
-	): Promise<UserType[]>{
-		const userLogin = await prisma.user.findMany({ where: { email : email, password: password} })
-
-		if(userLogin){
-			return userLogin;
-		}else{
-			empty
-		}
-	}
 	
 }
