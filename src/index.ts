@@ -2,8 +2,10 @@ import "reflect-metadata";
 import { ApolloServer } from "apollo-server";
 import { createContext } from "./context";
 import { createSchema } from "./graphql/schema";
+import dotenv from "dotenv";
 
 async function bootstrap() {
+  dotenv.config();
   const server: ApolloServer = new ApolloServer({
     schema: await createSchema(),
     context: createContext,

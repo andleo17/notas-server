@@ -1,11 +1,18 @@
 import { PrismaClient } from '@prisma/client';
+import { ExecutionParams } from 'subscriptions-transport-ws';
 
 const prisma = new PrismaClient();
 
-export interface Context {
+interface ExpressContext {
+	req: Express.Request
+	res: Express.Response
+	connection? : ExecutionParams
+}
+
+export interface Context extends ExpressContext {
 	prisma: PrismaClient;
 }
 
-export function createContext(): Context {
-	return { prisma };
+export function createContext(expressContext : ExpressContext): Context {
+	return { prisma, ...expressContext };
 }
