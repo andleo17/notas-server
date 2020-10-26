@@ -32,6 +32,26 @@ export default class CourseResolver {
 		return await prisma.course.findOne({ where: { code } }).groups();
 	}
 
+	@FieldResolver((returns) => [CourseType])
+	async coursePrerequisites(
+		@Root() { code }: CourseType,
+		@Ctx() { prisma }: Context
+	): Promise<CourseType[]> {
+		return await prisma.course
+			.findOne({ where: { code } })
+			.coursePrerequisites();
+	}
+
+	@FieldResolver((returns) => [CourseType])
+	async prerequisitesOf(
+		@Root() { code }: CourseType,
+		@Ctx() { prisma }: Context
+	): Promise<CourseType[]> {
+		return await prisma.course
+			.findOne({ where: { code } })
+			.prerequisitesOf();
+	}
+
 	@Query((returns) => CourseType)
 	async course(
 		@Arg('code') code: string,
