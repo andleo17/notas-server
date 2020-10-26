@@ -18,14 +18,14 @@ export default class GroupType implements Group {
 	@Field()
 	state: boolean;
 
-	@Field((type) => Int)
-	courseId: number;
+	@Field()
+	courseCode: string;
 
 	@Field((type) => Int)
 	teacherId: number;
 
-	@Field((type) => Int)
-	semesterId: number;
+	@Field()
+	semesterId: string;
 
 	@Field((type) => CourseType)
 	course?: CourseType;

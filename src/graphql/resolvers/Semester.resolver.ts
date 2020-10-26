@@ -19,34 +19,34 @@ import UserType from '../types/User.type';
 export default class SemesterResolver {
 	@FieldResolver((returns) => [UserType])
 	async users(
-		@Root() { id }: SemesterType,
+		@Root() { name }: SemesterType,
 		@Ctx() { prisma }: Context
 	): Promise<UserType[]> {
-		return await prisma.semester.findOne({ where: { id } }).users();
+		return await prisma.semester.findOne({ where: { name } }).users();
 	}
 
 	@FieldResolver((returns) => [UserType])
 	async groups(
-		@Root() { id }: SemesterType,
+		@Root() { name }: SemesterType,
 		@Ctx() { prisma }: Context
 	): Promise<GroupType[]> {
-		return await prisma.semester.findOne({ where: { id } }).groups();
+		return await prisma.semester.findOne({ where: { name } }).groups();
 	}
 
 	@FieldResolver((returns) => [UserType])
 	async enrollments(
-		@Root() { id }: SemesterType,
+		@Root() { name }: SemesterType,
 		@Ctx() { prisma }: Context
 	): Promise<EnrollmentType[]> {
-		return await prisma.semester.findOne({ where: { id } }).enrollments();
+		return await prisma.semester.findOne({ where: { name } }).enrollments();
 	}
 
 	@Query((returns) => SemesterType)
 	async semester(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('name') name: string,
 		@Ctx() { prisma }: Context
 	): Promise<SemesterType> {
-		return await prisma.semester.findOne({ where: { id } });
+		return await prisma.semester.findOne({ where: { name } });
 	}
 
 	@Query((returns) => [SemesterType])
@@ -70,14 +70,13 @@ export default class SemesterResolver {
 
 	@Mutation((returns) => SemesterType)
 	async modifySemester(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('name') name: string,
 		@Arg('data') data: SemesterInput,
 		@Ctx() { prisma }: Context
 	): Promise<SemesterType> {
 		return await prisma.semester.update({
-			where: { id },
+			where: { name },
 			data: {
-				name: data.name,
 				startDate: data.startDate,
 				finishDate: data.finishDate,
 				state: data.state,
@@ -87,9 +86,9 @@ export default class SemesterResolver {
 
 	@Mutation((returns) => SemesterType)
 	async deleteSemester(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('name') name: string,
 		@Ctx() { prisma }: Context
 	): Promise<SemesterType> {
-		return await prisma.semester.delete({ where: { id } });
+		return await prisma.semester.delete({ where: { name } });
 	}
 }

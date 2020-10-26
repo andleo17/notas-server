@@ -35,8 +35,8 @@ export default class UserType implements User {
 	@Field()
 	genre: boolean;
 
-	@Field((type) => Int)
-	semesterId: number;
+	@Field()
+	semesterId: string;
 
 	@Field((type) => Int)
 	schoolId: number;

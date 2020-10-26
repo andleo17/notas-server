@@ -1,0 +1,326 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "DeleteField",
+      "model": "Semester",
+      "field": "id"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Semester",
+          "field": "name"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "DeleteDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Semester",
+          "field": "name"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "UpdateField",
+      "model": "User",
+      "field": "semesterId",
+      "type": "String"
+    },
+    {
+      "tag": "UpdateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "semester"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "newValue": "[name]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Course",
+      "field": "coursePrerequisites",
+      "type": "Course",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Course",
+          "field": "coursePrerequisites"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Course",
+          "field": "coursePrerequisites"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"CoursesPrerequisites\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Course",
+          "field": "coursePrerequisites"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[code]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Course",
+      "field": "prerequisitesOf",
+      "type": "Course",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Course",
+          "field": "prerequisitesOf"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Course",
+          "field": "prerequisitesOf"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"CoursesPrerequisites\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Course",
+          "field": "prerequisitesOf"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[code]"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Course",
+      "field": "id"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Course",
+          "field": "code"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "DeleteDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Course",
+          "field": "code"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Group",
+      "field": "courseCode",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Group",
+      "field": "courseId"
+    },
+    {
+      "tag": "UpdateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Group",
+          "field": "course"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "newValue": "[courseCode]"
+    },
+    {
+      "tag": "UpdateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Group",
+          "field": "course"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "newValue": "[code]"
+    },
+    {
+      "tag": "UpdateField",
+      "model": "Group",
+      "field": "semesterId",
+      "type": "String"
+    },
+    {
+      "tag": "UpdateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Group",
+          "field": "semester"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "newValue": "[name]"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Model",
+          "model": "Group",
+          "arguments": [
+            {
+              "name": "",
+              "value": "[denomination, courseCode, teacherId, semesterId]"
+            }
+          ]
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "UpdateField",
+      "model": "Enrollment",
+      "field": "semesterId",
+      "type": "String"
+    },
+    {
+      "tag": "UpdateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Enrollment",
+          "field": "semester"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "newValue": "[name]"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Model",
+          "model": "Enrollment",
+          "arguments": [
+            {
+              "name": "",
+              "value": "[userId, semesterId]"
+            }
+          ]
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Model",
+          "model": "EnrollmentDetail",
+          "arguments": [
+            {
+              "name": "",
+              "value": "[enrollmentId, groupId]"
+            }
+          ]
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "DeleteDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "TypeActivity",
+          "field": "name"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Model",
+          "model": "Grade",
+          "arguments": [
+            {
+              "name": "",
+              "value": "[activityId, enrollmentDetailId]"
+            }
+          ]
+        },
+        "directive": "unique"
+      }
+    }
+  ]
+}

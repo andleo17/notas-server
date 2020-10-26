@@ -3,11 +3,11 @@ import CourseType from '../types/Course.type';
 
 @InputType()
 export default class CourseInput implements Partial<CourseType> {
-	@Field()
-	name: string;
+	@Field({ nullable: true })
+	code?: string;
 
 	@Field()
-	code: string;
+	name: string;
 
 	@Field((type) => Int)
 	credits: number;
@@ -20,4 +20,7 @@ export default class CourseInput implements Partial<CourseType> {
 
 	@Field((type) => Int)
 	schoolId?: number;
+
+	@Field({ nullable: true })
+	prerequisites?: string[];
 }

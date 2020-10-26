@@ -64,7 +64,7 @@ export default class EnrollmentResolver {
 		return await prisma.enrollment.create({
 			data: {
 				user: { connect: { id: data.userId } },
-				semester: { connect: { id: data.semesterId } },
+				semester: { connect: { name: data.semesterId } },
 			},
 		});
 	}

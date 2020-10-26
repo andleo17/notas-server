@@ -6,13 +6,10 @@ import SchoolType from './School.type';
 @ObjectType('Course')
 export default class CourseType implements Course {
 	@Field((type) => ID)
-	id: number;
+	code: string;
 
 	@Field()
 	name: string;
-
-	@Field()
-	code: string;
 
 	@Field((type) => Int)
 	credits: number;
@@ -31,4 +28,10 @@ export default class CourseType implements Course {
 
 	@Field((type) => [GroupType])
 	groups?: GroupType[];
+
+	@Field((type) => [CourseType])
+	coursePrerequisites?: CourseType[];
+
+	@Field((type) => [CourseType])
+	prerequisitesOf?: CourseType[];
 }

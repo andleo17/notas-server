@@ -7,9 +7,6 @@ import UserType from './User.type';
 @ObjectType('Semester')
 export default class SemesterType implements Semester {
 	@Field((type) => ID)
-	id: number;
-
-	@Field()
 	name: string;
 
 	@Field()

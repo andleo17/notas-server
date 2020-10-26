@@ -12,6 +12,6 @@ export default class EnrollmentInput implements Partial<EnrollmentType> {
 	@Field((type) => Int, { nullable: true })
 	userId?: number;
 
-	@Field((type) => Int, { nullable: true })
-	semesterId?: number;
+	@Field({ nullable: true })
+	semesterId?: string;
 }

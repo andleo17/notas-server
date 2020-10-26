@@ -33,8 +33,8 @@ export default class UserInput implements Partial<UserType> {
 	@Field({ nullable: true })
 	state?: boolean;
 
-	@Field((type) => Int, { nullable: true })
-	semesterId?: number;
+	@Field({ nullable: true })
+	semesterId?: string;
 
 	@Field((type) => Int, { nullable: true })
 	schoolId?: number;

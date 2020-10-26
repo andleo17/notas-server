@@ -18,26 +18,26 @@ import SchoolType from '../types/School.type';
 export default class CourseResolver {
 	@FieldResolver((returns) => SchoolType)
 	async school(
-		@Root() { id }: CourseType,
+		@Root() { code }: CourseType,
 		@Ctx() { prisma }: Context
 	): Promise<SchoolType> {
-		return await prisma.course.findOne({ where: { id } }).school();
+		return await prisma.course.findOne({ where: { code } }).school();
 	}
 
 	@FieldResolver((returns) => [GroupType])
 	async groups(
-		@Root() { id }: CourseType,
+		@Root() { code }: CourseType,
 		@Ctx() { prisma }: Context
 	): Promise<GroupType[]> {
-		return await prisma.course.findOne({ where: { id } }).groups();
+		return await prisma.course.findOne({ where: { code } }).groups();
 	}
 
 	@Query((returns) => CourseType)
 	async course(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('code') code: string,
 		@Ctx() { prisma }: Context
 	): Promise<CourseType> {
-		return await prisma.course.findOne({ where: { id } });
+		return await prisma.course.findOne({ where: { code } });
 	}
 
 	@Query((returns) => [CourseType])
@@ -52,26 +52,30 @@ export default class CourseResolver {
 	): Promise<CourseType> {
 		return await prisma.course.create({
 			data: {
-				name: data.name,
 				code: data.code,
+				name: data.name,
 				credits: data.credits,
 				academicPhase: data.academicPhase,
 				school: { connect: { id: data.schoolId } },
+				coursePrerequisites: {
+					connect: data.prerequisites?.map((c) => ({
+						code: c,
+					})),
+				},
 			},
 		});
 	}
 
 	@Mutation((returns) => CourseType)
 	async modifyCourse(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('code') code: string,
 		@Arg('data') data: CourseInput,
 		@Ctx() { prisma }: Context
 	): Promise<CourseType> {
 		return await prisma.course.update({
-			where: { id },
+			where: { code },
 			data: {
 				name: data.name,
-				code: data.code,
 				credits: data.credits,
 				academicPhase: data.academicPhase,
 				state: data.state,
@@ -81,9 +85,9 @@ export default class CourseResolver {
 
 	@Mutation((returns) => CourseType)
 	async deleteCourse(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('code') code: string,
 		@Ctx() { prisma }: Context
 	): Promise<CourseType> {
-		return await prisma.course.delete({ where: { id } });
+		return await prisma.course.delete({ where: { code } });
 	}
 }

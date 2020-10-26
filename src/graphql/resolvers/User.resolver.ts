@@ -92,7 +92,7 @@ export default class UserResolver {
 				birthDate: data.birthDate,
 				photo: data.photo,
 				genre: data.genre,
-				semester: { connect: { id: data.semesterId } },
+				semester: { connect: { name: data.semesterId } },
 				school: { connect: { id: data.schoolId } },
 			},
 		});

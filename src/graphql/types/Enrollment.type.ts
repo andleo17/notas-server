@@ -18,8 +18,8 @@ export default class EnrollmentType implements Enrollment {
 	@Field((type) => Int)
 	userId: number;
 
-	@Field((type) => Int)
-	semesterId: number;
+	@Field()
+	semesterId: string;
 
 	@Field((type) => UserType)
 	user?: UserType;

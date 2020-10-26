@@ -3,8 +3,8 @@ import SemesterType from '../types/Semester.type';
 
 @InputType()
 export default class SemesterInput implements Partial<SemesterType> {
-	@Field()
-	name: string;
+	@Field({ nullable: true })
+	name?: string;
 
 	@Field()
 	startDate?: Date;
@@ -12,6 +12,6 @@ export default class SemesterInput implements Partial<SemesterType> {
 	@Field()
 	finishDate?: Date;
 
-	@Field()
+	@Field({ nullable: true })
 	state?: boolean;
 }
