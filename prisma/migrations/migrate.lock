@@ -2,3 +2,4 @@
 
 20200926023035-base-de-datos-inicial
 20200930043524-add-state-field-on-group-table
+20201026030141-add-unique-constraint-to-user-table

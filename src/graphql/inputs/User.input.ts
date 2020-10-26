@@ -6,12 +6,6 @@ import EnrollmentType from '../types/Enrollment.type';
 
 @InputType()
 export default class UserInput implements Partial<UserType> {
-	@Field({ nullable: true })
-	state?: boolean;
-
-	@Field((type) => Int, { nullable: true })
-	facultyId?: number;
-
 	@Field()
 	nickname: string;
 
@@ -35,6 +29,9 @@ export default class UserInput implements Partial<UserType> {
 
 	@Field()
 	genre: boolean;
+
+	@Field({ nullable: true })
+	state?: boolean;
 
 	@Field((type) => Int, { nullable: true })
 	semesterId?: number;

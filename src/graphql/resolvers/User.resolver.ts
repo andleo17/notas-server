@@ -14,6 +14,11 @@ import UserType from '../types/User.type';
 import SemesterType from '../types/Semester.type';
 import SchoolType from '../types/School.type';
 import EnrollmentType from '../types/Enrollment.type';
+import AuthenticationPayloadType from '../types/AuthenticationPayload.type';
+import { compare, hash } from 'bcryptjs';
+import { sign } from 'jsonwebtoken';
+import { APP_SECRET } from '../../utils/authorization';
+import { AuthenticationError } from 'apollo-server';
 
 @Resolver((of) => UserType)
 export default class UserResolver {
@@ -54,15 +59,33 @@ export default class UserResolver {
 		return await prisma.user.findMany();
 	}
 
-	@Mutation((returns) => UserType)
-	async addUser(
+	@Query((returns) => AuthenticationPayloadType)
+	async login(
+		@Arg('nickname') nickname: string,
+		@Arg('password') password: string,
+		@Ctx() { prisma }: Context
+	): Promise<AuthenticationPayloadType> {
+		const user = await prisma.user.findOne({ where: { nickname } });
+		if (!user)
+			throw new AuthenticationError('No se ha encontrado el usuario');
+
+		const valid = await compare(password, user.password);
+		if (!valid) throw new AuthenticationError('Contraseña incorrecta');
+
+		const token = sign({ id: user.id }, APP_SECRET);
+		return { user, token };
+	}
+
+	@Mutation((returns) => AuthenticationPayloadType)
+	async signup(
 		@Arg('data') data: UserInput,
 		@Ctx() { prisma }: Context
-	): Promise<UserType> {
-		return await prisma.user.create({
+	): Promise<AuthenticationPayloadType> {
+		const password = await hash(data.password, 10);
+		const userCreated = await prisma.user.create({
 			data: {
 				nickname: data.nickname,
-				password: data.password,
+				password,
 				email: data.email,
 				name: data.name,
 				lastname: data.lastname,
@@ -73,5 +96,7 @@ export default class UserResolver {
 				school: { connect: { id: data.schoolId } },
 			},
 		});
+		const token = sign({ id: userCreated.id }, APP_SECRET);
+		return { token, user: userCreated };
 	}
 }
