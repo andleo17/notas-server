@@ -21,6 +21,6 @@ export default class CourseInput implements Partial<CourseType> {
 	@Field((type) => Int)
 	schoolId?: number;
 
-	@Field({ nullable: true })
+	@Field((type) => [String], { nullable: true })
 	prerequisites?: string[];
 }
