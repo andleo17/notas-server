@@ -6,10 +6,10 @@ export default class SemesterInput implements Partial<SemesterType> {
 	@Field({ nullable: true })
 	name?: string;
 
-	@Field()
+	@Field({ nullable: true })
 	startDate?: Date;
 
-	@Field()
+	@Field({ nullable: true })
 	finishDate?: Date;
 
 	@Field({ nullable: true })

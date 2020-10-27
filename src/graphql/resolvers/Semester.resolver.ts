@@ -64,6 +64,7 @@ export default class SemesterResolver {
 				name: data.name,
 				startDate: data.startDate,
 				finishDate: data.finishDate,
+				state: data.state,
 			},
 		});
 	}
