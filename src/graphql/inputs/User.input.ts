@@ -6,32 +6,32 @@ import EnrollmentType from '../types/Enrollment.type';
 
 @InputType()
 export default class UserInput implements Partial<UserType> {
-	@Field()
+	@Field({ nullable: true })
 	nickname: string;
 
-	@Field()
+	@Field({ nullable: true })
 	password: string;
 
-	@Field()
+	@Field({ nullable: true })
 	email: string;
 
-	@Field()
+	@Field({ nullable: true })
 	name: string;
 
-	@Field()
+	@Field({ nullable: true })
 	lastname: string;
 
-	@Field()
+	@Field({ nullable: true })
 	birthDate: Date;
 
-	@Field()
+	@Field({ nullable: true })
 	photo: string;
 
-	@Field()
+	@Field({ nullable: true })
 	genre: boolean;
 
 	@Field({ nullable: true })
-	state?: boolean;
+	state: boolean;
 
 	@Field({ nullable: true })
 	semesterId?: string;

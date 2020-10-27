@@ -36,6 +36,9 @@ export default class UserType implements User {
 	genre: boolean;
 
 	@Field()
+	state: boolean;
+
+	@Field()
 	semesterId: string;
 
 	@Field((type) => Int)

@@ -92,11 +92,43 @@ export default class UserResolver {
 				birthDate: data.birthDate,
 				photo: data.photo,
 				genre: data.genre,
+				state: data.state,
 				semester: { connect: { name: data.semesterId } },
 				school: { connect: { id: data.schoolId } },
 			},
 		});
 		const token = sign({ id: userCreated.id }, APP_SECRET);
 		return { token, user: userCreated };
+	}
+
+	@Mutation((returns) => UserType)
+	async modifyUser(
+		@Arg('id', (type) => Int) id: number,
+		@Arg('data') data: UserInput,
+		@Ctx() { prisma }: Context
+	): Promise<UserType> {
+		return await prisma.user.update({
+			where: { id },
+			data: {
+				nickname: data.nickname,
+				email: data.email,
+				name: data.name,
+				lastname: data.lastname,
+				birthDate: data.birthDate,
+				photo: data.photo,
+				genre: data.genre,
+				state: data.state,
+				semester: { connect: { name: data.semesterId } },
+				school: { connect: { id: data.schoolId } },
+			},
+		});
+	}
+
+	@Mutation((returns) => UserType)
+	async deleteUser(
+		@Arg('id', (type) => Int) id: number,
+		@Ctx() { prisma }: Context
+	): Promise<UserType> {
+		return await prisma.user.delete({ where: { id } });
 	}
 }

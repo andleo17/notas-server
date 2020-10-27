@@ -4,3 +4,4 @@
 20200930043524-add-state-field-on-group-table
 20201026030141-add-unique-constraint-to-user-table
 20201026053752-changing-any-keys
+20201027220014-adding-state-field-on-user-table
