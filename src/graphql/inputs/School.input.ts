@@ -3,7 +3,7 @@ import SchoolType from '../types/School.type';
 
 @InputType()
 export default class SchoolInput implements Partial<SchoolType> {
-	@Field()
+	@Field({ nullable: true })
 	name: string;
 
 	@Field({ nullable: true })

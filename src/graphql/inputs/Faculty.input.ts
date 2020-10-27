@@ -3,7 +3,7 @@ import FacultyType from '../types/Faculty.type';
 
 @InputType()
 export default class FacultyInput implements Partial<FacultyType> {
-	@Field()
+	@Field({ nullable: true })
 	name: string;
 
 	@Field({ nullable: true })

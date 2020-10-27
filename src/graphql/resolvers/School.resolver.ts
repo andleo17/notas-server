@@ -62,6 +62,7 @@ export default class SchoolResolver {
 		return await prisma.school.create({
 			data: {
 				name: data.name,
+				state: data.state,
 				faculty: { connect: { id: data.facultyId } },
 			},
 		});
