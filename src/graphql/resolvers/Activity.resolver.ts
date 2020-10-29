@@ -84,6 +84,7 @@ export default class ActivityResolver {
 				name: data.name,
 				weight: data.weight,
 				presentationDate: data.presentationDate,
+				state: data.state,
 				typeActivity: { connect: { id: data.typeActivityId } },
 				parentActivity: { connect: { id: data.activityId } },
 				group: { connect: { id: data.groupId } },

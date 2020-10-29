@@ -63,6 +63,8 @@ export default class EnrollmentResolver {
 	): Promise<EnrollmentType> {
 		return await prisma.enrollment.create({
 			data: {
+				weightedAverage: data.weightedAverage,
+				state: data.state,
 				user: { connect: { id: data.userId } },
 				semester: { connect: { name: data.semesterId } },
 			},

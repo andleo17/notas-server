@@ -3,7 +3,7 @@ import GroupType from '../types/Group.type';
 
 @InputType()
 export default class GroupInput implements Partial<GroupType> {
-	@Field()
+	@Field({ nullable: true })
 	denomination: string;
 
 	@Field({ nullable: true })

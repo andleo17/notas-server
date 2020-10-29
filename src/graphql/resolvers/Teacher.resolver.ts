@@ -42,7 +42,11 @@ export default class TeacherResolver {
 		@Ctx() { prisma }: Context
 	): Promise<TeacherType> {
 		return await prisma.teacher.create({
-			data: { name: data.name, lastname: data.lastname },
+			data: {
+				name: data.name,
+				lastname: data.lastname,
+				state: data.state,
+			},
 		});
 	}
 

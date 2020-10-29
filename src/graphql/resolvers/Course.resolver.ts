@@ -76,6 +76,7 @@ export default class CourseResolver {
 				name: data.name,
 				credits: data.credits,
 				academicPhase: data.academicPhase,
+				state: data.state,
 				school: { connect: { id: data.schoolId } },
 				coursePrerequisites: {
 					connect: data.prerequisites?.map((c) => ({

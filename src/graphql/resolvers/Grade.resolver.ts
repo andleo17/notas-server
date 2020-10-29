@@ -52,6 +52,9 @@ export default class GradeResolver {
 	): Promise<GradeType> {
 		return await prisma.grade.create({
 			data: {
+				calification: data.calification,
+				confirmated: data.confirmated,
+				state: data.state,
 				activity: { connect: { id: data.activityId } },
 				enrollmentDetail: { connect: { id: data.enrollmentDetailId } },
 			},

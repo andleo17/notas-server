@@ -3,10 +3,10 @@ import TeacherType from '../types/Teacher.type';
 
 @InputType()
 export default class TeacherInput implements Partial<TeacherType> {
-	@Field()
+	@Field({ nullable: true })
 	name: string;
 
-	@Field()
+	@Field({ nullable: true })
 	lastname: string;
 
 	@Field({ nullable: true })

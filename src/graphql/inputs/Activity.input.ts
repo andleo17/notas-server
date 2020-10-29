@@ -3,10 +3,10 @@ import ActivityType from '../types/Activity.type';
 
 @InputType()
 export default class ActivityInput implements Partial<ActivityType> {
-	@Field()
+	@Field({ nullable: true })
 	name: string;
 
-	@Field((type) => Float)
+	@Field((type) => Float, { nullable: true })
 	weight: number;
 
 	@Field({ nullable: true })

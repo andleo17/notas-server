@@ -3,13 +3,13 @@ import ScheduleType from '../types/Schedule.type';
 
 @InputType()
 export default class ScheduleInput implements Partial<ScheduleType> {
-	@Field((type) => Int)
+	@Field((type) => Int, { nullable: true })
 	day: number;
 
-	@Field()
+	@Field({ nullable: true })
 	startHour: Date;
 
-	@Field()
+	@Field({ nullable: true })
 	finishHour: Date;
 
 	@Field({ nullable: true })

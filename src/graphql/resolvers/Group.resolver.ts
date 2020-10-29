@@ -91,6 +91,7 @@ export default class GroupResolver {
 		return await prisma.group.create({
 			data: {
 				denomination: data.denomination,
+				state: data.state,
 				course: { connect: { code: data.courseCode } },
 				teacher: { connect: { id: data.teacherId } },
 				semester: { connect: { name: data.semesterId } },

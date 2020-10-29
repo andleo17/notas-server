@@ -46,6 +46,7 @@ export default class ScheduleResolver {
 				day: data.day,
 				startHour: data.startHour,
 				finishHour: data.finishHour,
+				state: data.state,
 				group: { connect: { id: data.groupId } },
 			},
 		});

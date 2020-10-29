@@ -1,8 +1,5 @@
 import { Field, InputType, Int } from 'type-graphql';
 import UserType from '../types/User.type';
-import SemesterType from '../types/Semester.type';
-import SchoolType from '../types/School.type';
-import EnrollmentType from '../types/Enrollment.type';
 
 @InputType()
 export default class UserInput implements Partial<UserType> {
