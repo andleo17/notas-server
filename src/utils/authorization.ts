@@ -1,12 +1,13 @@
+import { UserAuth, UserRole } from '../context';
 import { AuthenticationError } from 'apollo-server';
 import { verify } from 'jsonwebtoken';
+import { APP_SECRET } from './env';
 
-export const APP_SECRET = process.env.APP_SECRET;
-
-export function getUser(authorization: string) {
+export function getUser(authorization: string): UserAuth {
 	if (!authorization) throw new AuthenticationError('No Logged');
 
 	const token = authorization.replace('Bearer ', '');
-	const id = verify(token, APP_SECRET);
-	return id;
+	const user = <UserAuth>verify(token, APP_SECRET);
+	if (!(user.role in UserRole)) throw new AuthenticationError('No user role');
+	return user;
 }

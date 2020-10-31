@@ -17,8 +17,8 @@ import EnrollmentType from '../types/Enrollment.type';
 import AuthenticationPayloadType from '../types/AuthenticationPayload.type';
 import { compare, hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
-import { APP_SECRET } from '../../utils/authorization';
 import { AuthenticationError } from 'apollo-server';
+import { APP_SECRET } from '../../utils/env';
 
 @Resolver((of) => UserType)
 export default class UserResolver {
