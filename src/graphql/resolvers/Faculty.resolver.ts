@@ -1,3 +1,4 @@
+import { AuthenticationError } from 'apollo-server';
 import {
 	Arg,
 	Ctx,
@@ -8,7 +9,7 @@ import {
 	Resolver,
 	Root,
 } from 'type-graphql';
-import { Context } from '../../context';
+import { Context, UserRole } from '../../context';
 import FacultyInput from '../inputs/Faculty.input';
 import FacultyType from '../types/Faculty.type';
 import SchoolType from '../types/School.type';
@@ -39,8 +40,10 @@ export default class FacultyResolver {
 	@Mutation((returns) => FacultyType)
 	async addFaculty(
 		@Arg('data') data: FacultyInput,
-		@Ctx() { prisma }: Context
+		@Ctx() { prisma, user }: Context
 	): Promise<FacultyType> {
+		if (user.role !== UserRole.ADMIN)
+			throw new AuthenticationError('No admin');
 		return await prisma.faculty.create({
 			data: { name: data.name, state: data.state },
 		});
@@ -50,8 +53,10 @@ export default class FacultyResolver {
 	async modifyFaculty(
 		@Arg('id', (type) => Int) id: number,
 		@Arg('data') data: FacultyInput,
-		@Ctx() { prisma }: Context
+		@Ctx() { prisma, user }: Context
 	): Promise<FacultyType> {
+		if (user.role !== UserRole.ADMIN)
+			throw new AuthenticationError('No admin');
 		return await prisma.faculty.update({
 			where: { id },
 			data: { name: data.name, state: data.state },
@@ -61,8 +66,10 @@ export default class FacultyResolver {
 	@Mutation((returns) => FacultyType)
 	async deleteFaculty(
 		@Arg('id', (type) => Int) id: number,
-		@Ctx() { prisma }: Context
+		@Ctx() { prisma, user }: Context
 	): Promise<FacultyType> {
+		if (user.role !== UserRole.ADMIN)
+			throw new AuthenticationError('No admin');
 		return prisma.faculty.delete({ where: { id } });
 	}
 }
