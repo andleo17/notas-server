@@ -1,3 +1,4 @@
+import { FindManyFacultyArgs, FindOneFacultyArgs } from '@prisma/client';
 import { AuthenticationError } from 'apollo-server';
 import {
 	Arg,
@@ -26,15 +27,21 @@ export default class FacultyResolver {
 
 	@Query((returns) => FacultyType)
 	async faculty(
-		@Arg('id', (type) => Int) id: number,
-		@Ctx() { prisma }: Context
+		@Arg('id', (type) => Int, { nullable: true }) id: number,
+		@Arg('name', { nullable: true }) name: string,
+		@Ctx()
+		{ prisma }: Context
 	): Promise<FacultyType> {
-		return await prisma.faculty.findOne({ where: { id } });
+		return await prisma.faculty.findFirst({
+			where: { id, name: { contains: name, mode: 'insensitive' } },
+		});
 	}
 
 	@Query((returns) => [FacultyType])
-	async faculties(@Ctx() { prisma }: Context): Promise<FacultyType[]> {
-		return await prisma.faculty.findMany();
+	async faculties(@Ctx() { prisma, user }: Context): Promise<FacultyType[]> {
+		const args: FindManyFacultyArgs = { orderBy: { name: 'asc' } };
+		if (user.role === UserRole.USER) args.where = { state: true };
+		return await prisma.faculty.findMany(args);
 	}
 
 	@Mutation((returns) => FacultyType)
