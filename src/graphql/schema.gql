@@ -214,8 +214,8 @@ type Query {
   login(nickname: String!, password: String!): AuthenticationPayload!
   schedule(id: Int!): Schedule!
   schedules: [Schedule!]!
-  school(id: Int!): School!
-  schools: [School!]!
+  school(id: Int, name: String): School!
+  schools(facultyId: Int): [School!]!
   semester(name: String!): Semester!
   semesters: [Semester!]!
   teacher(id: Int!): Teacher!

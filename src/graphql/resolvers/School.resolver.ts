@@ -1,3 +1,5 @@
+import { FindManySchoolArgs } from '@prisma/client';
+import { AuthenticationError } from 'apollo-server';
 import {
 	Arg,
 	Ctx,
@@ -8,7 +10,8 @@ import {
 	Resolver,
 	Root,
 } from 'type-graphql';
-import { Context } from '../../context';
+import { Context, UserRole } from '../../context';
+import { NO_ADMIN } from '../../utils/errors';
 import SchoolInput from '../inputs/School.input';
 import CourseType from '../types/Course.type';
 import FacultyType from '../types/Faculty.type';
@@ -43,22 +46,35 @@ export default class SchoolResolver {
 
 	@Query((returns) => SchoolType)
 	async school(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', (type) => Int, { nullable: true }) id: number,
+		@Arg('name', { nullable: true }) name: string,
 		@Ctx() { prisma }: Context
 	): Promise<SchoolType> {
-		return await prisma.school.findOne({ where: { id } });
+		return await prisma.school.findFirst({
+			where: { id, name: { contains: name, mode: 'insensitive' } },
+		});
 	}
 
 	@Query((returns) => [SchoolType])
-	async schools(@Ctx() { prisma }: Context): Promise<SchoolType[]> {
-		return await prisma.school.findMany();
+	async schools(
+		@Arg('facultyId', (type) => Int, { nullable: true }) facultyId: number,
+		@Ctx() { prisma, user }: Context
+	): Promise<SchoolType[]> {
+		const args: FindManySchoolArgs = {
+			orderBy: { name: 'asc' },
+			where: { facultyId },
+		};
+		if (user.role === UserRole.USER) args.where.state = true;
+		return await prisma.school.findMany(args);
 	}
 
 	@Mutation((returns) => SchoolType)
 	async addSchool(
 		@Arg('data') data: SchoolInput,
-		@Ctx() { prisma }: Context
+		@Ctx() { prisma, user }: Context
 	): Promise<SchoolType> {
+		if (user.role !== UserRole.ADMIN)
+			throw new AuthenticationError(NO_ADMIN);
 		return await prisma.school.create({
 			data: {
 				name: data.name,
@@ -72,8 +88,10 @@ export default class SchoolResolver {
 	async modifySchool(
 		@Arg('id', (type) => Int) id: number,
 		@Arg('data') data: SchoolInput,
-		@Ctx() { prisma }: Context
+		@Ctx() { prisma, user }: Context
 	): Promise<SchoolType> {
+		if (user.role !== UserRole.ADMIN)
+			throw new AuthenticationError(NO_ADMIN);
 		return await prisma.school.update({
 			where: { id },
 			data: { name: data.name, state: data.state },
@@ -83,8 +101,10 @@ export default class SchoolResolver {
 	@Mutation((returns) => SchoolType)
 	async deleteSchool(
 		@Arg('id', (type) => Int) id: number,
-		@Ctx() { prisma }: Context
+		@Ctx() { prisma, user }: Context
 	): Promise<SchoolType> {
+		if (user.role !== UserRole.ADMIN)
+			throw new AuthenticationError(NO_ADMIN);
 		return await prisma.school.delete({ where: { id } });
 	}
 }

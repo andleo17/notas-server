@@ -11,6 +11,7 @@ import {
 	Root,
 } from 'type-graphql';
 import { Context, UserRole } from '../../context';
+import { NO_ADMIN } from '../../utils/errors';
 import FacultyInput from '../inputs/Faculty.input';
 import FacultyType from '../types/Faculty.type';
 import SchoolType from '../types/School.type';
@@ -50,7 +51,7 @@ export default class FacultyResolver {
 		@Ctx() { prisma, user }: Context
 	): Promise<FacultyType> {
 		if (user.role !== UserRole.ADMIN)
-			throw new AuthenticationError('No admin');
+			throw new AuthenticationError(NO_ADMIN);
 		return await prisma.faculty.create({
 			data: { name: data.name, state: data.state },
 		});
@@ -63,7 +64,7 @@ export default class FacultyResolver {
 		@Ctx() { prisma, user }: Context
 	): Promise<FacultyType> {
 		if (user.role !== UserRole.ADMIN)
-			throw new AuthenticationError('No admin');
+			throw new AuthenticationError(NO_ADMIN);
 		return await prisma.faculty.update({
 			where: { id },
 			data: { name: data.name, state: data.state },
@@ -76,7 +77,7 @@ export default class FacultyResolver {
 		@Ctx() { prisma, user }: Context
 	): Promise<FacultyType> {
 		if (user.role !== UserRole.ADMIN)
-			throw new AuthenticationError('No admin');
+			throw new AuthenticationError(NO_ADMIN);
 		return prisma.faculty.delete({ where: { id } });
 	}
 }
