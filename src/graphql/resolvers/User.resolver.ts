@@ -8,7 +8,7 @@ import {
 	Resolver,
 	Root,
 } from 'type-graphql';
-import { Context } from '../../context';
+import { Context, UserAuth } from '../../context';
 import UserInput from '../inputs/User.input';
 import UserType from '../types/User.type';
 import SemesterType from '../types/Semester.type';
@@ -63,23 +63,26 @@ export default class UserResolver {
 	async login(
 		@Arg('nickname') nickname: string,
 		@Arg('password') password: string,
-		@Ctx() { prisma }: Context
+		@Ctx() { prisma, user }: Context
 	): Promise<AuthenticationPayloadType> {
-		const user = await prisma.user.findOne({ where: { nickname } });
-		if (!user)
+		const userLogged = await prisma.user.findOne({ where: { nickname } });
+		if (!userLogged)
 			throw new AuthenticationError('No se ha encontrado el usuario');
 
-		const valid = await compare(password, user.password);
+		const valid = await compare(password, userLogged.password);
 		if (!valid) throw new AuthenticationError('Contraseña incorrecta');
 
-		const token = sign({ id: user.id }, APP_SECRET);
-		return { user, token };
+		const token = sign(
+			<UserAuth>{ id: userLogged.id, role: user.role },
+			APP_SECRET
+		);
+		return { user: userLogged, token };
 	}
 
 	@Mutation((returns) => AuthenticationPayloadType)
 	async signup(
 		@Arg('data') data: UserInput,
-		@Ctx() { prisma }: Context
+		@Ctx() { prisma, user }: Context
 	): Promise<AuthenticationPayloadType> {
 		const password = await hash(data.password, 10);
 		const userCreated = await prisma.user.create({
@@ -97,7 +100,10 @@ export default class UserResolver {
 				school: { connect: { id: data.schoolId } },
 			},
 		});
-		const token = sign({ id: userCreated.id }, APP_SECRET);
+		const token = sign(
+			<UserAuth>{ id: userCreated.id, role: user.role },
+			APP_SECRET
+		);
 		return { token, user: userCreated };
 	}
 
