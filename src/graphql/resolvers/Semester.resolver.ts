@@ -1,3 +1,4 @@
+import { AuthenticationError } from 'apollo-server';
 import {
 	Arg,
 	Ctx,
@@ -8,7 +9,8 @@ import {
 	Resolver,
 	Root,
 } from 'type-graphql';
-import { Context } from '../../context';
+import { Context, UserRole } from '../../context';
+import { NO_ADMIN } from '../../utils/errors';
 import SemesterInput from '../inputs/Semester.input';
 import EnrollmentType from '../types/Enrollment.type';
 import GroupType from '../types/Group.type';
@@ -51,14 +53,16 @@ export default class SemesterResolver {
 
 	@Query((returns) => [SemesterType])
 	async semesters(@Ctx() { prisma }: Context): Promise<SemesterType[]> {
-		return await prisma.semester.findMany();
+		return await prisma.semester.findMany({ orderBy: { name: 'asc' } });
 	}
 
 	@Mutation((returns) => SemesterType)
 	async addSemester(
 		@Arg('data') data: SemesterInput,
-		@Ctx() { prisma }: Context
+		@Ctx() { prisma, user }: Context
 	): Promise<SemesterType> {
+		if (user.role !== UserRole.ADMIN)
+			throw new AuthenticationError(NO_ADMIN);
 		return await prisma.semester.create({
 			data: {
 				name: data.name,
@@ -73,8 +77,10 @@ export default class SemesterResolver {
 	async modifySemester(
 		@Arg('name') name: string,
 		@Arg('data') data: SemesterInput,
-		@Ctx() { prisma }: Context
+		@Ctx() { prisma, user }: Context
 	): Promise<SemesterType> {
+		if (user.role !== UserRole.ADMIN)
+			throw new AuthenticationError(NO_ADMIN);
 		return await prisma.semester.update({
 			where: { name },
 			data: {
@@ -88,8 +94,10 @@ export default class SemesterResolver {
 	@Mutation((returns) => SemesterType)
 	async deleteSemester(
 		@Arg('name') name: string,
-		@Ctx() { prisma }: Context
+		@Ctx() { prisma, user }: Context
 	): Promise<SemesterType> {
+		if (user.role !== UserRole.ADMIN)
+			throw new AuthenticationError(NO_ADMIN);
 		return await prisma.semester.delete({ where: { name } });
 	}
 }
