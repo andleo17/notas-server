@@ -69,7 +69,9 @@ export default class UserResolver {
 		@Arg('password') password: string,
 		@Ctx() { prisma, user }: Context
 	): Promise<AuthenticationPayloadType> {
-		const userLogged = await prisma.user.findOne({ where: { nickname } });
+		const userLogged = await prisma.user.findFirst({
+			where: { OR: [{ nickname }, { email: nickname }] },
+		});
 		if (!userLogged)
 			throw new AuthenticationError('No se ha encontrado el usuario');
 
