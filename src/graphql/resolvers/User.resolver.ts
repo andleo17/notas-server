@@ -8,7 +8,7 @@ import {
 	Resolver,
 	Root,
 } from 'type-graphql';
-import { Context, UserAuth } from '../../context';
+import { Context, UserAuth, UserRole } from '../../context';
 import UserInput from '../inputs/User.input';
 import UserType from '../types/User.type';
 import SemesterType from '../types/Semester.type';
@@ -19,6 +19,7 @@ import { compare, hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import { AuthenticationError } from 'apollo-server';
 import { APP_SECRET } from '../../utils/env';
+import { BANNED, NO_ADMIN } from '../../utils/errors';
 
 @Resolver((of) => UserType)
 export default class UserResolver {
@@ -48,14 +49,17 @@ export default class UserResolver {
 
 	@Query((returns) => UserType)
 	async user(
-		@Arg('id', (type) => Int) id: number,
-		@Ctx() { prisma }: Context
+		@Arg('id', (type) => Int, { nullable: true }) id: number,
+		@Ctx() { prisma, user }: Context
 	): Promise<UserType> {
+		if (user.role === UserRole.USER) id = user.id;
 		return await prisma.user.findOne({ where: { id } });
 	}
 
 	@Query((returns) => [UserType])
-	async users(@Ctx() { prisma }: Context): Promise<UserType[]> {
+	async users(@Ctx() { prisma, user }: Context): Promise<UserType[]> {
+		if (user.role !== UserRole.ADMIN)
+			throw new AuthenticationError(NO_ADMIN);
 		return await prisma.user.findMany();
 	}
 
@@ -71,6 +75,7 @@ export default class UserResolver {
 
 		const valid = await compare(password, userLogged.password);
 		if (!valid) throw new AuthenticationError('Contraseña incorrecta');
+		if (!userLogged.state) throw new AuthenticationError(BANNED);
 
 		const token = sign(
 			<UserAuth>{ id: userLogged.id, role: user.role },
@@ -84,11 +89,10 @@ export default class UserResolver {
 		@Arg('data') data: UserInput,
 		@Ctx() { prisma, user }: Context
 	): Promise<AuthenticationPayloadType> {
-		const password = await hash(data.password, 10);
 		const userCreated = await prisma.user.create({
 			data: {
 				nickname: data.nickname,
-				password,
+				password: await hash(data.password, 10),
 				email: data.email,
 				name: data.name,
 				lastname: data.lastname,
@@ -109,14 +113,16 @@ export default class UserResolver {
 
 	@Mutation((returns) => UserType)
 	async modifyUser(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', (type) => Int, { nullable: true }) id: number,
 		@Arg('data') data: UserInput,
-		@Ctx() { prisma }: Context
+		@Ctx() { prisma, user }: Context
 	): Promise<UserType> {
+		if (user.role === UserRole.USER) id = user.id;
 		return await prisma.user.update({
 			where: { id },
 			data: {
 				nickname: data.nickname,
+				password: data.password && (await hash(data.password, 10)),
 				email: data.email,
 				name: data.name,
 				lastname: data.lastname,
@@ -124,8 +130,10 @@ export default class UserResolver {
 				photo: data.photo,
 				genre: data.genre,
 				state: data.state,
-				semester: { connect: { name: data.semesterId } },
-				school: { connect: { id: data.schoolId } },
+				semester: data.semesterId && {
+					connect: { name: data.semesterId },
+				},
+				school: data.schoolId && { connect: { id: data.schoolId } },
 			},
 		});
 	}
@@ -133,8 +141,10 @@ export default class UserResolver {
 	@Mutation((returns) => UserType)
 	async deleteUser(
 		@Arg('id', (type) => Int) id: number,
-		@Ctx() { prisma }: Context
+		@Ctx() { prisma, user }: Context
 	): Promise<UserType> {
+		if (user.role !== UserRole.ADMIN)
+			throw new AuthenticationError(NO_ADMIN);
 		return await prisma.user.delete({ where: { id } });
 	}
 }

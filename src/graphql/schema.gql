@@ -192,7 +192,7 @@ type Mutation {
   modifySemester(data: SemesterInput!, name: String!): Semester!
   modifyTeacher(data: TeacherInput!, id: Int!): Teacher!
   modifyTypeActivity(data: TypeActivityInput!, id: Int!): TypeActivity!
-  modifyUser(data: UserInput!, id: Int!): User!
+  modifyUser(data: UserInput!, id: Int): User!
   signup(data: UserInput!): AuthenticationPayload!
 }
 
@@ -222,7 +222,7 @@ type Query {
   teachers: [Teacher!]!
   typeActivity(id: Int!): TypeActivity!
   typesActivity: [TypeActivity!]!
-  user(id: Int!): User!
+  user(id: Int): User!
   users: [User!]!
 }
 
