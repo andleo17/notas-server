@@ -219,7 +219,7 @@ type Query {
   semester(name: String!): Semester!
   semesters: [Semester!]!
   teacher(id: Int!): Teacher!
-  teachers: [Teacher!]!
+  teachers(names: String!): [Teacher!]!
   typeActivity(id: Int!): TypeActivity!
   typesActivity: [TypeActivity!]!
   user(id: Int): User!

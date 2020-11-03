@@ -1,3 +1,4 @@
+import { FindManyTeacherArgs } from '@prisma/client';
 import {
 	Arg,
 	Ctx,
@@ -8,7 +9,7 @@ import {
 	Resolver,
 	Root,
 } from 'type-graphql';
-import { Context } from '../../context';
+import { Context, UserRole } from '../../context';
 import TeacherInput from '../inputs/Teacher.input';
 import GroupType from '../types/Group.type';
 import TeacherType from '../types/Teacher.type';
@@ -32,8 +33,21 @@ export default class TeacherResolver {
 	}
 
 	@Query((returns) => [TeacherType])
-	async teachers(@Ctx() { prisma }: Context): Promise<TeacherType[]> {
-		return await prisma.teacher.findMany();
+	async teachers(
+		@Arg('names') names: string,
+		@Ctx() { prisma, user }: Context
+	): Promise<TeacherType[]> {
+		const args: FindManyTeacherArgs = {
+			where: {
+				OR: [
+					{ name: { contains: names, mode: 'insensitive' } },
+					{ lastname: { contains: names, mode: 'insensitive' } },
+				],
+			},
+			orderBy: [{ lastname: 'asc' }, { name: 'asc' }],
+		};
+		if (user.role !== UserRole.ADMIN) args.where.state = true;
+		return await prisma.teacher.findMany(args);
 	}
 
 	@Mutation((returns) => TeacherType)
