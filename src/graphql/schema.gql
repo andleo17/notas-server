@@ -199,8 +199,8 @@ type Mutation {
 type Query {
   activities: [Activity!]!
   activity(id: Int!): Activity!
-  course(code: String!): Course!
-  courses: [Course!]!
+  course(code: String): Course!
+  courses(academicPhase: Float, name: String, school: Float): [Course!]!
   enrollment(id: Int!): Enrollment!
   enrollmentDetail(id: Int!): EnrollmentDetail!
   enrollmentDetails: [EnrollmentDetail!]!

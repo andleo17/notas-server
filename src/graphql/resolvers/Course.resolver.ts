@@ -39,7 +39,7 @@ export default class CourseResolver {
 	): Promise<CourseType[]> {
 		return await prisma.course
 			.findOne({ where: { code } })
-			.coursePrerequisites();
+			.coursePrerequisites({ orderBy: { name: 'asc' } });
 	}
 
 	@FieldResolver((returns) => [CourseType])
@@ -49,20 +49,32 @@ export default class CourseResolver {
 	): Promise<CourseType[]> {
 		return await prisma.course
 			.findOne({ where: { code } })
-			.prerequisitesOf();
+			.prerequisitesOf({ orderBy: { name: 'asc' } });
 	}
 
 	@Query((returns) => CourseType)
 	async course(
-		@Arg('code') code: string,
+		@Arg('code', { nullable: true }) code: string,
 		@Ctx() { prisma }: Context
 	): Promise<CourseType> {
 		return await prisma.course.findOne({ where: { code } });
 	}
 
 	@Query((returns) => [CourseType])
-	async courses(@Ctx() { prisma }: Context): Promise<CourseType[]> {
-		return await prisma.course.findMany();
+	async courses(
+		@Arg('name', { nullable: true }) name: string,
+		@Arg('academicPhase', { nullable: true }) academicPhase: number,
+		@Arg('school', { nullable: true }) schoolId: number,
+		@Ctx() { prisma }: Context
+	): Promise<CourseType[]> {
+		return await prisma.course.findMany({
+			where: {
+				name: { contains: name, mode: 'insensitive' },
+				academicPhase,
+				schoolId,
+			},
+			orderBy: { name: 'asc' },
+		});
 	}
 
 	@Mutation((returns) => CourseType)
