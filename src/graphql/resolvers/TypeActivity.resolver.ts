@@ -1,3 +1,5 @@
+import { FindManyTypeActivityArgs } from '@prisma/client';
+import { AuthenticationError } from 'apollo-server';
 import {
 	Arg,
 	Ctx,
@@ -8,7 +10,8 @@ import {
 	Resolver,
 	Root,
 } from 'type-graphql';
-import { Context } from '../../context';
+import { Context, UserRole } from '../../context';
+import { NO_ADMIN } from '../../utils/errors';
 import TypeActivityInput from '../inputs/TypeActivity.input';
 import ActivityType from '../types/Activity.type';
 import TypeActivityType from '../types/TypeActivity.type';
@@ -37,14 +40,16 @@ export default class TypeActivityResolver {
 	async typesActivity(
 		@Ctx() { prisma }: Context
 	): Promise<TypeActivityType[]> {
-		return await prisma.typeActivity.findMany();
+		return await prisma.typeActivity.findMany({ orderBy: { name: 'asc' } });
 	}
 
 	@Mutation((returns) => TypeActivityType)
 	async addTypeActivity(
 		@Arg('data') data: TypeActivityInput,
-		@Ctx() { prisma }: Context
+		@Ctx() { prisma, user }: Context
 	): Promise<TypeActivityType> {
+		if (user.role !== UserRole.ADMIN)
+			throw new AuthenticationError(NO_ADMIN);
 		return await prisma.typeActivity.create({ data: { name: data.name } });
 	}
 
@@ -52,8 +57,10 @@ export default class TypeActivityResolver {
 	async modifyTypeActivity(
 		@Arg('id', (type) => Int) id: number,
 		@Arg('data') data: TypeActivityInput,
-		@Ctx() { prisma }: Context
+		@Ctx() { prisma, user }: Context
 	): Promise<TypeActivityType> {
+		if (user.role !== UserRole.ADMIN)
+			throw new AuthenticationError(NO_ADMIN);
 		return await prisma.typeActivity.update({
 			where: { id },
 			data: { name: data.name },
@@ -63,8 +70,10 @@ export default class TypeActivityResolver {
 	@Mutation((returns) => TypeActivityType)
 	async deleteTypeActivity(
 		@Arg('id', (type) => Int) id: number,
-		@Ctx() { prisma }: Context
+		@Ctx() { prisma, user }: Context
 	): Promise<TypeActivityType> {
+		if (user.role !== UserRole.ADMIN)
+			throw new AuthenticationError(NO_ADMIN);
 		return await prisma.typeActivity.delete({ where: { id } });
 	}
 }
