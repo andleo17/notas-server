@@ -12,7 +12,7 @@
 		"start": "npm run build && npm run serve",
 		"dev": "npx nodemon -w ./src -e ts --exec \"npx ts-node ./src\"",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"heroku-prebuild": "npm update"
+		"heroku-postbuild": "npm update"
 	},
 	"keywords": [],
 	"author": "",
