@@ -34,13 +34,13 @@ export default class ActivityType implements Activity {
 	typeActivity?: TypeActivityType;
 
 	@Field((type) => ActivityType, { nullable: true })
-	activity?: ActivityType;
+	parentActivity?: ActivityType;
 
 	@Field((type) => GroupType)
 	group?: GroupType;
 
 	@Field((type) => [ActivityType])
-	activities?: ActivityType[];
+	childActivities?: ActivityType[];
 
 	@Field((type) => [GradeType])
 	grades?: GradeType[];

@@ -9,10 +9,10 @@ export default class SemesterType implements Semester {
 	@Field((type) => ID)
 	name: string;
 
-	@Field()
+	@Field({ nullable: true })
 	startDate: Date;
 
-	@Field()
+	@Field({ nullable: true })
 	finishDate: Date;
 
 	@Field()
