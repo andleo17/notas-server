@@ -1,9 +1,9 @@
+import { FindManySemesterArgs } from '@prisma/client';
 import { AuthenticationError } from 'apollo-server';
 import {
 	Arg,
 	Ctx,
 	FieldResolver,
-	Int,
 	Mutation,
 	Query,
 	Resolver,
@@ -52,8 +52,16 @@ export default class SemesterResolver {
 	}
 
 	@Query((returns) => [SemesterType])
-	async semesters(@Ctx() { prisma }: Context): Promise<SemesterType[]> {
-		return await prisma.semester.findMany({ orderBy: { name: 'asc' } });
+	async semesters(@Ctx() { prisma, user }: Context): Promise<SemesterType[]> {
+		const args: FindManySemesterArgs = { orderBy: { name: 'asc' } };
+		if (user.role === UserRole.USER)
+			args.where = { startDate: { lte: new Date() } };
+		return await prisma.semester.findMany(args);
+	}
+
+	@Query((returns) => SemesterType)
+	async currentSemester(@Ctx() { prisma }: Context): Promise<SemesterType> {
+		return await prisma.semester.findFirst({ where: { state: true } });
 	}
 
 	@Mutation((returns) => SemesterType)

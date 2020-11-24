@@ -4,8 +4,6 @@
 # -----------------------------------------------
 
 type Activity {
-  activities: [Activity!]!
-  activity: Activity
   activityId: Int
   childActivities: [Activity!]!
   grades: [Grade!]!
@@ -201,6 +199,7 @@ type Query {
   activity(id: Int!): Activity!
   course(code: String): Course!
   courses(academicPhase: Float, name: String, school: Float): [Course!]!
+  currentSemester: Semester!
   enrollment(id: Int!): Enrollment!
   enrollmentDetail(id: Int!): EnrollmentDetail!
   enrollmentDetails: [EnrollmentDetail!]!
@@ -262,10 +261,10 @@ input SchoolInput {
 
 type Semester {
   enrollments: [Enrollment!]!
-  finishDate: DateTime!
+  finishDate: DateTime
   groups: [Group!]!
   name: ID!
-  startDate: DateTime!
+  startDate: DateTime
   state: Boolean!
   users: [User!]!
 }
