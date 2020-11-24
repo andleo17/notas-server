@@ -22,7 +22,7 @@ export default class ActivityResolver {
 		@Root() { id }: ActivityType,
 		@Ctx() { prisma }: Context
 	): Promise<TypeActivityType> {
-		return await prisma.activity.findOne({ where: { id } }).typeActivity();
+		return await prisma.activity.findUnique({ where: { id } }).typeActivity();
 	}
 
 	@FieldResolver((returns) => ActivityType, { nullable: true })
@@ -31,7 +31,7 @@ export default class ActivityResolver {
 		@Ctx() { prisma }: Context
 	): Promise<ActivityType> {
 		return await prisma.activity
-			.findOne({ where: { id } })
+			.findUnique({ where: { id } })
 			.parentActivity();
 	}
 
@@ -40,7 +40,7 @@ export default class ActivityResolver {
 		@Root() { id }: ActivityType,
 		@Ctx() { prisma }: Context
 	): Promise<GroupType> {
-		return await prisma.activity.findOne({ where: { id } }).group();
+		return await prisma.activity.findUnique({ where: { id } }).group();
 	}
 
 	@FieldResolver((returns) => [ActivityType])
@@ -49,7 +49,7 @@ export default class ActivityResolver {
 		@Ctx() { prisma }: Context
 	): Promise<ActivityType[]> {
 		return await prisma.activity
-			.findOne({ where: { id } })
+			.findUnique({ where: { id } })
 			.childActivities();
 	}
 
@@ -58,7 +58,7 @@ export default class ActivityResolver {
 		@Root() { id }: ActivityType,
 		@Ctx() { prisma }: Context
 	): Promise<GradeType[]> {
-		return await prisma.activity.findOne({ where: { id } }).grades();
+		return await prisma.activity.findUnique({ where: { id } }).grades();
 	}
 
 	@Query((returns) => ActivityType)
@@ -66,7 +66,7 @@ export default class ActivityResolver {
 		@Arg('id', (type) => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<ActivityType> {
-		return await prisma.activity.findOne({ where: { id } });
+		return await prisma.activity.findUnique({ where: { id } });
 	}
 
 	@Query((returns) => [ActivityType])

@@ -21,7 +21,7 @@ export default class GradeResolver {
 		@Root() { id }: GradeType,
 		@Ctx() { prisma }: Context
 	): Promise<ActivityType> {
-		return await prisma.grade.findOne({ where: { id } }).activity();
+		return await prisma.grade.findUnique({ where: { id } }).activity();
 	}
 
 	@FieldResolver((returns) => EnrollmentDetailType)
@@ -29,7 +29,7 @@ export default class GradeResolver {
 		@Root() { id }: GradeType,
 		@Ctx() { prisma }: Context
 	): Promise<EnrollmentDetailType> {
-		return await prisma.grade.findOne({ where: { id } }).enrollmentDetail();
+		return await prisma.grade.findUnique({ where: { id } }).enrollmentDetail();
 	}
 
 	@Query((returns) => GradeType)
@@ -37,7 +37,7 @@ export default class GradeResolver {
 		@Arg('id', (type) => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<GradeType> {
-		return await prisma.grade.findOne({ where: { id } });
+		return await prisma.grade.findUnique({ where: { id } });
 	}
 
 	@Query((returns) => [GradeType])

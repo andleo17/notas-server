@@ -1,4 +1,4 @@
-import { FindManyTypeActivityArgs } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { AuthenticationError } from 'apollo-server';
 import {
 	Arg,
@@ -24,7 +24,7 @@ export default class TypeActivityResolver {
 		@Ctx() { prisma }: Context
 	): Promise<ActivityType[]> {
 		return await prisma.typeActivity
-			.findOne({ where: { id } })
+			.findUnique({ where: { id } })
 			.activities();
 	}
 
@@ -33,7 +33,7 @@ export default class TypeActivityResolver {
 		@Arg('id', (type) => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<TypeActivityType> {
-		return await prisma.typeActivity.findOne({ where: { id } });
+		return await prisma.typeActivity.findUnique({ where: { id } });
 	}
 
 	@Query((returns) => [TypeActivityType])

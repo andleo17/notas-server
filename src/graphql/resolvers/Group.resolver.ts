@@ -25,7 +25,7 @@ export default class GroupResolver {
 		@Root() { id }: GroupType,
 		@Ctx() { prisma }: Context
 	): Promise<CourseType> {
-		return await prisma.group.findOne({ where: { id } }).course();
+		return await prisma.group.findUnique({ where: { id } }).course();
 	}
 
 	@FieldResolver((returns) => TeacherType)
@@ -33,7 +33,7 @@ export default class GroupResolver {
 		@Root() { id }: GroupType,
 		@Ctx() { prisma }: Context
 	): Promise<TeacherType> {
-		return await prisma.group.findOne({ where: { id } }).teacher();
+		return await prisma.group.findUnique({ where: { id } }).teacher();
 	}
 
 	@FieldResolver((returns) => SemesterType)
@@ -41,7 +41,7 @@ export default class GroupResolver {
 		@Root() { id }: GroupType,
 		@Ctx() { prisma }: Context
 	): Promise<SemesterType> {
-		return await prisma.group.findOne({ where: { id } }).semester();
+		return await prisma.group.findUnique({ where: { id } }).semester();
 	}
 
 	@FieldResolver((returns) => [EnrollmentDetailType])
@@ -50,7 +50,7 @@ export default class GroupResolver {
 		@Ctx() { prisma }: Context
 	): Promise<EnrollmentDetailType[]> {
 		return await prisma.group
-			.findOne({ where: { id } })
+			.findUnique({ where: { id } })
 			.enrollmentDetails();
 	}
 
@@ -59,7 +59,7 @@ export default class GroupResolver {
 		@Root() { id }: GroupType,
 		@Ctx() { prisma }: Context
 	): Promise<ActivityType[]> {
-		return await prisma.group.findOne({ where: { id } }).activities();
+		return await prisma.group.findUnique({ where: { id } }).activities();
 	}
 
 	@FieldResolver((returns) => [ScheduleType])
@@ -67,7 +67,7 @@ export default class GroupResolver {
 		@Root() { id }: GroupType,
 		@Ctx() { prisma }: Context
 	): Promise<ScheduleType[]> {
-		return await prisma.group.findOne({ where: { id } }).schedules();
+		return await prisma.group.findUnique({ where: { id } }).schedules();
 	}
 
 	@Query((returns) => GroupType)
@@ -75,7 +75,7 @@ export default class GroupResolver {
 		@Arg('id', (type) => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<GroupType> {
-		return await prisma.group.findOne({ where: { id } });
+		return await prisma.group.findUnique({ where: { id } });
 	}
 
 	@Query((returns) => [GroupType])

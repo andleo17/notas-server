@@ -1,4 +1,4 @@
-import { FindManySchoolArgs } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { AuthenticationError } from 'apollo-server';
 import {
 	Arg,
@@ -25,7 +25,7 @@ export default class SchoolResolver {
 		@Root() { id }: SchoolType,
 		@Ctx() { prisma }: Context
 	): Promise<FacultyType> {
-		return await prisma.school.findOne({ where: { id } }).faculty();
+		return await prisma.school.findUnique({ where: { id } }).faculty();
 	}
 
 	@FieldResolver((returns) => [UserType])
@@ -33,7 +33,7 @@ export default class SchoolResolver {
 		@Root() { id }: SchoolType,
 		@Ctx() { prisma }: Context
 	): Promise<UserType[]> {
-		return await prisma.school.findOne({ where: { id } }).users();
+		return await prisma.school.findUnique({ where: { id } }).users();
 	}
 
 	@FieldResolver((returns) => [CourseType])
@@ -41,7 +41,7 @@ export default class SchoolResolver {
 		@Root() { id }: SchoolType,
 		@Ctx() { prisma }: Context
 	): Promise<CourseType[]> {
-		return await prisma.school.findOne({ where: { id } }).courses();
+		return await prisma.school.findUnique({ where: { id } }).courses();
 	}
 
 	@Query((returns) => SchoolType)
@@ -60,7 +60,7 @@ export default class SchoolResolver {
 		@Arg('facultyId', (type) => Int, { nullable: true }) facultyId: number,
 		@Ctx() { prisma, user }: Context
 	): Promise<SchoolType[]> {
-		const args: FindManySchoolArgs = {
+		const args: Prisma.FindManySchoolArgs = {
 			orderBy: { name: 'asc' },
 			where: { facultyId },
 		};

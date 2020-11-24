@@ -28,7 +28,7 @@ export default class UserResolver {
 		@Root() { id }: UserType,
 		@Ctx() { prisma }: Context
 	): Promise<SemesterType> {
-		return await prisma.user.findOne({ where: { id } }).semester();
+		return await prisma.user.findUnique({ where: { id } }).semester();
 	}
 
 	@FieldResolver((returns) => SchoolType)
@@ -36,7 +36,7 @@ export default class UserResolver {
 		@Root() { id }: UserType,
 		@Ctx() { prisma }: Context
 	): Promise<SchoolType> {
-		return await prisma.user.findOne({ where: { id } }).school();
+		return await prisma.user.findUnique({ where: { id } }).school();
 	}
 
 	@FieldResolver((returns) => [EnrollmentType])
@@ -44,7 +44,7 @@ export default class UserResolver {
 		@Root() { id }: UserType,
 		@Ctx() { prisma }: Context
 	): Promise<EnrollmentType[]> {
-		return await prisma.user.findOne({ where: { id } }).enrollments();
+		return await prisma.user.findUnique({ where: { id } }).enrollments();
 	}
 
 	@Query((returns) => UserType)
@@ -53,7 +53,7 @@ export default class UserResolver {
 		@Ctx() { prisma, user }: Context
 	): Promise<UserType> {
 		if (user.role === UserRole.USER) id = user.id;
-		return await prisma.user.findOne({ where: { id } });
+		return await prisma.user.findUnique({ where: { id } });
 	}
 
 	@Query((returns) => [UserType])

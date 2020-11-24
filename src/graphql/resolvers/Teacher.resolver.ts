@@ -1,4 +1,4 @@
-import { FindManyTeacherArgs } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import {
 	Arg,
 	Ctx,
@@ -21,7 +21,7 @@ export default class TeacherResolver {
 		@Root() { id }: TeacherType,
 		@Ctx() { prisma }: Context
 	): Promise<GroupType[]> {
-		return await prisma.teacher.findOne({ where: { id } }).groups();
+		return await prisma.teacher.findUnique({ where: { id } }).groups();
 	}
 
 	@Query((returns) => TeacherType)
@@ -29,7 +29,7 @@ export default class TeacherResolver {
 		@Arg('id', (type) => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<TeacherType> {
-		return await prisma.teacher.findOne({ where: { id } });
+		return await prisma.teacher.findUnique({ where: { id } });
 	}
 
 	@Query((returns) => [TeacherType])
@@ -37,7 +37,7 @@ export default class TeacherResolver {
 		@Arg('names') names: string,
 		@Ctx() { prisma, user }: Context
 	): Promise<TeacherType[]> {
-		const args: FindManyTeacherArgs = {
+		const args: Prisma.FindManyTeacherArgs = {
 			where: {
 				OR: [
 					{ name: { contains: names, mode: 'insensitive' } },

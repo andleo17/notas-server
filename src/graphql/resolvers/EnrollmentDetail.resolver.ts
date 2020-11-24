@@ -23,7 +23,7 @@ export default class EnrollmentDetailResolver {
 		@Ctx() { prisma }: Context
 	): Promise<EnrollmentType> {
 		return await prisma.enrollmentDetail
-			.findOne({ where: { id } })
+			.findUnique({ where: { id } })
 			.enrollment();
 	}
 
@@ -32,7 +32,7 @@ export default class EnrollmentDetailResolver {
 		@Root() { id }: EnrollmentDetailType,
 		@Ctx() { prisma }: Context
 	): Promise<GroupType> {
-		return await prisma.enrollmentDetail.findOne({ where: { id } }).group();
+		return await prisma.enrollmentDetail.findUnique({ where: { id } }).group();
 	}
 
 	@FieldResolver((returns) => [GradeType])
@@ -41,7 +41,7 @@ export default class EnrollmentDetailResolver {
 		@Ctx() { prisma }: Context
 	): Promise<GradeType[]> {
 		return await prisma.enrollmentDetail
-			.findOne({ where: { id } })
+			.findUnique({ where: { id } })
 			.grades();
 	}
 
@@ -50,7 +50,7 @@ export default class EnrollmentDetailResolver {
 		@Arg('id', (type) => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<EnrollmentDetailType> {
-		return await prisma.enrollmentDetail.findOne({ where: { id } });
+		return await prisma.enrollmentDetail.findUnique({ where: { id } });
 	}
 
 	@Query((returns) => [EnrollmentDetailType])

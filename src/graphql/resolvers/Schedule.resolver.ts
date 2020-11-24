@@ -20,7 +20,7 @@ export default class ScheduleResolver {
 		@Root() { id }: ScheduleType,
 		@Ctx() { prisma }: Context
 	): Promise<GroupType> {
-		return await prisma.schedule.findOne({ where: { id } }).group();
+		return await prisma.schedule.findUnique({ where: { id } }).group();
 	}
 
 	@Query((returns) => ScheduleType)
@@ -28,7 +28,7 @@ export default class ScheduleResolver {
 		@Arg('id', (type) => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<ScheduleType> {
-		return await prisma.schedule.findOne({ where: { id } });
+		return await prisma.schedule.findUnique({ where: { id } });
 	}
 
 	@Query((returns) => [ScheduleType])

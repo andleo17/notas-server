@@ -1,4 +1,4 @@
-import { FindManySemesterArgs } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { AuthenticationError } from 'apollo-server';
 import {
 	Arg,
@@ -24,7 +24,7 @@ export default class SemesterResolver {
 		@Root() { name }: SemesterType,
 		@Ctx() { prisma }: Context
 	): Promise<UserType[]> {
-		return await prisma.semester.findOne({ where: { name } }).users();
+		return await prisma.semester.findUnique({ where: { name } }).users();
 	}
 
 	@FieldResolver((returns) => [UserType])
@@ -32,7 +32,7 @@ export default class SemesterResolver {
 		@Root() { name }: SemesterType,
 		@Ctx() { prisma }: Context
 	): Promise<GroupType[]> {
-		return await prisma.semester.findOne({ where: { name } }).groups();
+		return await prisma.semester.findUnique({ where: { name } }).groups();
 	}
 
 	@FieldResolver((returns) => [UserType])
@@ -40,7 +40,7 @@ export default class SemesterResolver {
 		@Root() { name }: SemesterType,
 		@Ctx() { prisma }: Context
 	): Promise<EnrollmentType[]> {
-		return await prisma.semester.findOne({ where: { name } }).enrollments();
+		return await prisma.semester.findUnique({ where: { name } }).enrollments();
 	}
 
 	@Query((returns) => SemesterType)
@@ -48,12 +48,12 @@ export default class SemesterResolver {
 		@Arg('name') name: string,
 		@Ctx() { prisma }: Context
 	): Promise<SemesterType> {
-		return await prisma.semester.findOne({ where: { name } });
+		return await prisma.semester.findUnique({ where: { name } });
 	}
 
 	@Query((returns) => [SemesterType])
 	async semesters(@Ctx() { prisma, user }: Context): Promise<SemesterType[]> {
-		const args: FindManySemesterArgs = { orderBy: { name: 'asc' } };
+		const args: Prisma.FindManySemesterArgs = { orderBy: { name: 'asc' } };
 		if (user.role === UserRole.USER)
 			args.where = { startDate: { lte: new Date() } };
 		return await prisma.semester.findMany(args);

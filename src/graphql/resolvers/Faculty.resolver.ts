@@ -1,4 +1,4 @@
-import { FindManyFacultyArgs, FindOneFacultyArgs } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { AuthenticationError } from 'apollo-server';
 import {
 	Arg,
@@ -23,7 +23,7 @@ export default class FacultyResolver {
 		@Root() { id }: FacultyType,
 		@Ctx() { prisma }: Context
 	): Promise<SchoolType[]> {
-		return await prisma.faculty.findOne({ where: { id } }).schools();
+		return await prisma.faculty.findUnique({ where: { id } }).schools();
 	}
 
 	@Query((returns) => FacultyType)
@@ -40,7 +40,7 @@ export default class FacultyResolver {
 
 	@Query((returns) => [FacultyType])
 	async faculties(@Ctx() { prisma, user }: Context): Promise<FacultyType[]> {
-		const args: FindManyFacultyArgs = { orderBy: { name: 'asc' } };
+		const args: Prisma.FindManyFacultyArgs = { orderBy: { name: 'asc' } };
 		if (user.role === UserRole.USER) args.where = { state: true };
 		return await prisma.faculty.findMany(args);
 	}

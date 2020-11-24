@@ -21,7 +21,7 @@ export default class CourseResolver {
 		@Root() { code }: CourseType,
 		@Ctx() { prisma }: Context
 	): Promise<SchoolType> {
-		return await prisma.course.findOne({ where: { code } }).school();
+		return await prisma.course.findUnique({ where: { code } }).school();
 	}
 
 	@FieldResolver((returns) => [GroupType])
@@ -29,7 +29,7 @@ export default class CourseResolver {
 		@Root() { code }: CourseType,
 		@Ctx() { prisma }: Context
 	): Promise<GroupType[]> {
-		return await prisma.course.findOne({ where: { code } }).groups();
+		return await prisma.course.findUnique({ where: { code } }).groups();
 	}
 
 	@FieldResolver((returns) => [CourseType])
@@ -38,7 +38,7 @@ export default class CourseResolver {
 		@Ctx() { prisma }: Context
 	): Promise<CourseType[]> {
 		return await prisma.course
-			.findOne({ where: { code } })
+			.findUnique({ where: { code } })
 			.coursePrerequisites({ orderBy: { name: 'asc' } });
 	}
 
@@ -48,7 +48,7 @@ export default class CourseResolver {
 		@Ctx() { prisma }: Context
 	): Promise<CourseType[]> {
 		return await prisma.course
-			.findOne({ where: { code } })
+			.findUnique({ where: { code } })
 			.prerequisitesOf({ orderBy: { name: 'asc' } });
 	}
 
@@ -57,7 +57,7 @@ export default class CourseResolver {
 		@Arg('code', { nullable: true }) code: string,
 		@Ctx() { prisma }: Context
 	): Promise<CourseType> {
-		return await prisma.course.findOne({ where: { code } });
+		return await prisma.course.findUnique({ where: { code } });
 	}
 
 	@Query((returns) => [CourseType])
