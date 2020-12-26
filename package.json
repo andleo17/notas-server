@@ -7,10 +7,10 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"build": "npx rimraf dist && npx -p typescript tsc",
-		"serve": "node dist",
+		"build": "npx tsc -b",
+		"serve": "node dist -r dotenv/config",
 		"start": "npm run build && npm run serve",
-		"dev": "npx nodemon -w ./src -e ts --exec \"npx ts-node ./src\"",
+		"dev": "ts-node-dev --respawn src/index.ts -r dotenv/config",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"heroku-postbuild": "npm update && npx prisma migrate up --experimental && npx prisma generate"
 	},
@@ -18,20 +18,17 @@
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
-		"@prisma/cli": "^2.12.0",
-		"@prisma/client": "^2.12.0",
-		"@prisma/codemods": "^0.5.1",
+		"@prisma/cli": "^2.13.1",
 		"@types/bcryptjs": "^2.4.2",
 		"@types/express": "^4.17.9",
 		"@types/jsonwebtoken": "^8.5.0",
-		"@types/node": "^14.14.9",
-		"nodemon": "^2.0.6",
-		"rimraf": "^3.0.2",
-		"ts-node": "^9.0.0",
-		"typescript": "^4.1.2"
+		"@types/node": "^14.14.16",
+		"ts-node-dev": "^1.1.1",
+		"typescript": "^4.1.3"
 	},
 	"dependencies": {
-		"apollo-server": "^2.18.1",
+		"@prisma/client": "^2.13.1",
+		"apollo-server": "^2.19.1",
 		"bcryptjs": "^2.4.3",
 		"class-validator": "^0.12.2",
 		"dotenv": "^8.2.0",

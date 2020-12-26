@@ -1,17 +1,22 @@
 {
 	"compilerOptions": {
-		"skipLibCheck": true,
+		"target": "ES6",
 		"module": "CommonJS",
+		"lib": ["ES6", "ESNext"],
+		"sourceMap": true,
+		"outDir": "./dist",
+		"rootDir": ".",
+		"moduleResolution": "Node",
+		"skipLibCheck": true,
 		"removeComments": true,
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
-		"target": "ES2015",
-		"outDir": "dist",
 		"allowSyntheticDefaultImports": true,
-		"lib": ["ES2020", "ESNext"],
-		"esModuleInterop": true,
-		"typeRoots": ["node_modules/@types", "src/@types"]
+		"noUnusedLocals": true,
+		"noImplicitThis": true,
+		"noImplicitReturns": true,
+		"noUnusedParameters": true
 	},
-	"include": ["src/**/*.ts"],
+	"include": ["./src/**/*.ts"],
 	"exclude": ["node_modules"]
 }
