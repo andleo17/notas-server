@@ -1,13 +1,13 @@
-import { Schedule } from '@prisma/client';
+import { Schedule } from '../../../prisma/@client';
 import { Field, ID, Int, ObjectType } from 'type-graphql';
 import GroupType from './Group.type';
 
 @ObjectType('Schedule')
 export default class ScheduleType implements Schedule {
-	@Field((type) => ID)
+	@Field(() => ID)
 	id: number;
 
-	@Field((type) => Int)
+	@Field(() => Int)
 	day: number;
 
 	@Field()
@@ -19,9 +19,9 @@ export default class ScheduleType implements Schedule {
 	@Field()
 	state: boolean;
 
-	@Field((type) => Int)
+	@Field(() => Int)
 	groupId: number;
 
-	@Field((type) => GroupType)
+	@Field(() => GroupType)
 	group?: GroupType;
 }

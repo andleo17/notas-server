@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from '../../../prisma/@client';
 import { AuthenticationError } from 'apollo-server';
 import {
 	Arg,
@@ -17,9 +17,9 @@ import GroupType from '../types/Group.type';
 import SemesterType from '../types/Semester.type';
 import UserType from '../types/User.type';
 
-@Resolver((of) => SemesterType)
+@Resolver(() => SemesterType)
 export default class SemesterResolver {
-	@FieldResolver((returns) => [UserType])
+	@FieldResolver(() => [UserType])
 	async users(
 		@Root() { name }: SemesterType,
 		@Ctx() { prisma }: Context
@@ -27,7 +27,7 @@ export default class SemesterResolver {
 		return await prisma.semester.findUnique({ where: { name } }).users();
 	}
 
-	@FieldResolver((returns) => [UserType])
+	@FieldResolver(() => [UserType])
 	async groups(
 		@Root() { name }: SemesterType,
 		@Ctx() { prisma }: Context
@@ -35,15 +35,17 @@ export default class SemesterResolver {
 		return await prisma.semester.findUnique({ where: { name } }).groups();
 	}
 
-	@FieldResolver((returns) => [UserType])
+	@FieldResolver(() => [UserType])
 	async enrollments(
 		@Root() { name }: SemesterType,
 		@Ctx() { prisma }: Context
 	): Promise<EnrollmentType[]> {
-		return await prisma.semester.findUnique({ where: { name } }).enrollments();
+		return await prisma.semester
+			.findUnique({ where: { name } })
+			.enrollments();
 	}
 
-	@Query((returns) => SemesterType)
+	@Query(() => SemesterType)
 	async semester(
 		@Arg('name') name: string,
 		@Ctx() { prisma }: Context
@@ -51,7 +53,7 @@ export default class SemesterResolver {
 		return await prisma.semester.findUnique({ where: { name } });
 	}
 
-	@Query((returns) => [SemesterType])
+	@Query(() => [SemesterType])
 	async semesters(@Ctx() { prisma, user }: Context): Promise<SemesterType[]> {
 		const args: Prisma.FindManySemesterArgs = { orderBy: { name: 'asc' } };
 		if (user.role === UserRole.USER)
@@ -59,12 +61,12 @@ export default class SemesterResolver {
 		return await prisma.semester.findMany(args);
 	}
 
-	@Query((returns) => SemesterType)
+	@Query(() => SemesterType)
 	async currentSemester(@Ctx() { prisma }: Context): Promise<SemesterType> {
 		return await prisma.semester.findFirst({ where: { state: true } });
 	}
 
-	@Mutation((returns) => SemesterType)
+	@Mutation(() => SemesterType)
 	async addSemester(
 		@Arg('data') data: SemesterInput,
 		@Ctx() { prisma, user }: Context
@@ -81,7 +83,7 @@ export default class SemesterResolver {
 		});
 	}
 
-	@Mutation((returns) => SemesterType)
+	@Mutation(() => SemesterType)
 	async modifySemester(
 		@Arg('name') name: string,
 		@Arg('data') data: SemesterInput,
@@ -99,7 +101,7 @@ export default class SemesterResolver {
 		});
 	}
 
-	@Mutation((returns) => SemesterType)
+	@Mutation(() => SemesterType)
 	async deleteSemester(
 		@Arg('name') name: string,
 		@Ctx() { prisma, user }: Context

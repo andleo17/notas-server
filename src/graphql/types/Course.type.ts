@@ -1,37 +1,37 @@
-import { Course } from '@prisma/client';
+import { Course } from '../../../prisma/@client';
 import { Field, ID, Int, ObjectType } from 'type-graphql';
 import GroupType from './Group.type';
 import SchoolType from './School.type';
 
 @ObjectType('Course')
 export default class CourseType implements Course {
-	@Field((type) => ID)
+	@Field(() => ID)
 	code: string;
 
 	@Field()
 	name: string;
 
-	@Field((type) => Int)
+	@Field(() => Int)
 	credits: number;
 
-	@Field((type) => Int)
+	@Field(() => Int)
 	academicPhase: number;
 
 	@Field()
 	state: boolean;
 
-	@Field((type) => Int)
+	@Field(() => Int)
 	schoolId: number;
 
-	@Field((type) => SchoolType)
+	@Field(() => SchoolType)
 	school?: SchoolType;
 
-	@Field((type) => [GroupType])
+	@Field(() => [GroupType])
 	groups?: GroupType[];
 
-	@Field((type) => [CourseType])
+	@Field(() => [CourseType])
 	coursePrerequisites?: CourseType[];
 
-	@Field((type) => [CourseType])
+	@Field(() => [CourseType])
 	prerequisitesOf?: CourseType[];
 }

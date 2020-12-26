@@ -3,7 +3,7 @@ import ScheduleType from '../types/Schedule.type';
 
 @InputType()
 export default class ScheduleInput implements Partial<ScheduleType> {
-	@Field((type) => Int, { nullable: true })
+	@Field(() => Int, { nullable: true })
 	day: number;
 
 	@Field({ nullable: true })
@@ -15,6 +15,6 @@ export default class ScheduleInput implements Partial<ScheduleType> {
 	@Field({ nullable: true })
 	state?: boolean;
 
-	@Field((type) => Int, { nullable: true })
+	@Field(() => Int, { nullable: true })
 	groupId?: number;
 }

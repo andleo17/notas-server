@@ -15,17 +15,19 @@ import GradeType from '../types/Grade.type';
 import GroupType from '../types/Group.type';
 import TypeActivityType from '../types/TypeActivity.type';
 
-@Resolver((of) => ActivityType)
+@Resolver(() => ActivityType)
 export default class ActivityResolver {
-	@FieldResolver((returns) => TypeActivityType)
+	@FieldResolver(() => TypeActivityType)
 	async typeActivity(
 		@Root() { id }: ActivityType,
 		@Ctx() { prisma }: Context
 	): Promise<TypeActivityType> {
-		return await prisma.activity.findUnique({ where: { id } }).typeActivity();
+		return await prisma.activity
+			.findUnique({ where: { id } })
+			.typeActivity();
 	}
 
-	@FieldResolver((returns) => ActivityType, { nullable: true })
+	@FieldResolver(() => ActivityType, { nullable: true })
 	async parentActivity(
 		@Root() { id }: ActivityType,
 		@Ctx() { prisma }: Context
@@ -35,7 +37,7 @@ export default class ActivityResolver {
 			.parentActivity();
 	}
 
-	@FieldResolver((returns) => GroupType)
+	@FieldResolver(() => GroupType)
 	async group(
 		@Root() { id }: ActivityType,
 		@Ctx() { prisma }: Context
@@ -43,7 +45,7 @@ export default class ActivityResolver {
 		return await prisma.activity.findUnique({ where: { id } }).group();
 	}
 
-	@FieldResolver((returns) => [ActivityType])
+	@FieldResolver(() => [ActivityType])
 	async childActivities(
 		@Root() { id }: ActivityType,
 		@Ctx() { prisma }: Context
@@ -53,7 +55,7 @@ export default class ActivityResolver {
 			.childActivities();
 	}
 
-	@FieldResolver((returns) => [GradeType])
+	@FieldResolver(() => [GradeType])
 	async grades(
 		@Root() { id }: ActivityType,
 		@Ctx() { prisma }: Context
@@ -61,20 +63,20 @@ export default class ActivityResolver {
 		return await prisma.activity.findUnique({ where: { id } }).grades();
 	}
 
-	@Query((returns) => ActivityType)
+	@Query(() => ActivityType)
 	async activity(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<ActivityType> {
 		return await prisma.activity.findUnique({ where: { id } });
 	}
 
-	@Query((returns) => [ActivityType])
+	@Query(() => [ActivityType])
 	async activities(@Ctx() { prisma }: Context): Promise<ActivityType[]> {
 		return await prisma.activity.findMany();
 	}
 
-	@Mutation((returns) => ActivityType)
+	@Mutation(() => ActivityType)
 	async addActivity(
 		@Arg('data') data: ActivityInput,
 		@Ctx() { prisma }: Context
@@ -92,9 +94,9 @@ export default class ActivityResolver {
 		});
 	}
 
-	@Mutation((returns) => ActivityType)
+	@Mutation(() => ActivityType)
 	async modifyActivity(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Arg('data') data: ActivityInput,
 		@Ctx() { prisma }: Context
 	): Promise<ActivityType> {
@@ -109,9 +111,9 @@ export default class ActivityResolver {
 		});
 	}
 
-	@Mutation((returns) => ActivityType)
+	@Mutation(() => ActivityType)
 	async deleteActivity(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<ActivityType> {
 		return await prisma.activity.delete({ where: { id } });

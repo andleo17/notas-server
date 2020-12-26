@@ -9,6 +9,6 @@ export default class SchoolInput implements Partial<SchoolType> {
 	@Field({ nullable: true })
 	state?: boolean;
 
-	@Field((type) => Int, { nullable: true })
+	@Field(() => Int, { nullable: true })
 	facultyId?: number;
 }

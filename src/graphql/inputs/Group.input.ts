@@ -12,7 +12,7 @@ export default class GroupInput implements Partial<GroupType> {
 	@Field({ nullable: true })
 	courseCode?: string;
 
-	@Field((type) => Int, { nullable: true })
+	@Field(() => Int, { nullable: true })
 	teacherId?: number;
 
 	@Field({ nullable: true })

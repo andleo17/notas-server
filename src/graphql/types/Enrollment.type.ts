@@ -1,4 +1,4 @@
-import { Enrollment } from '@prisma/client';
+import { Enrollment } from '../../../prisma/@client';
 import { Field, ID, Int, ObjectType } from 'type-graphql';
 import EnrollmentDetailType from './EnrollmentDetail.type';
 import SemesterType from './Semester.type';
@@ -6,27 +6,27 @@ import UserType from './User.type';
 
 @ObjectType('Enrollment')
 export default class EnrollmentType implements Enrollment {
-	@Field((type) => ID)
+	@Field(() => ID)
 	id: number;
 
-	@Field((type) => Int, { nullable: true })
+	@Field(() => Int, { nullable: true })
 	weightedAverage: number;
 
 	@Field()
 	state: boolean;
 
-	@Field((type) => Int)
+	@Field(() => Int)
 	userId: number;
 
 	@Field()
 	semesterId: string;
 
-	@Field((type) => UserType)
+	@Field(() => UserType)
 	user?: UserType;
 
-	@Field((type) => SemesterType)
+	@Field(() => SemesterType)
 	semester?: SemesterType;
 
-	@Field((type) => [EnrollmentDetailType])
+	@Field(() => [EnrollmentDetailType])
 	enrollmentDetails?: EnrollmentDetailType[];
 }

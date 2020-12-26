@@ -1,4 +1,4 @@
-import { School } from '@prisma/client';
+import { School } from '../../../prisma/@client';
 import { Field, ID, Int, ObjectType } from 'type-graphql';
 import CourseType from './Course.type';
 import FacultyType from './Faculty.type';
@@ -6,7 +6,7 @@ import UserType from './User.type';
 
 @ObjectType('School')
 export default class SchoolType implements School {
-	@Field((type) => ID)
+	@Field(() => ID)
 	id: number;
 
 	@Field()
@@ -15,15 +15,15 @@ export default class SchoolType implements School {
 	@Field()
 	state: boolean;
 
-	@Field((type) => Int)
+	@Field(() => Int)
 	facultyId: number;
 
-	@Field((type) => FacultyType)
+	@Field(() => FacultyType)
 	faculty?: FacultyType;
 
-	@Field((type) => [UserType])
+	@Field(() => [UserType])
 	users?: UserType[];
 
-	@Field((tpye) => [CourseType])
+	@Field(() => [CourseType])
 	courses?: CourseType[];
 }

@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from '../../../prisma/@client';
 import { AuthenticationError } from 'apollo-server';
 import {
 	Arg,
@@ -18,9 +18,9 @@ import FacultyType from '../types/Faculty.type';
 import SchoolType from '../types/School.type';
 import UserType from '../types/User.type';
 
-@Resolver((of) => SchoolType)
+@Resolver(() => SchoolType)
 export default class SchoolResolver {
-	@FieldResolver((returns) => FacultyType)
+	@FieldResolver(() => FacultyType)
 	async faculty(
 		@Root() { id }: SchoolType,
 		@Ctx() { prisma }: Context
@@ -28,7 +28,7 @@ export default class SchoolResolver {
 		return await prisma.school.findUnique({ where: { id } }).faculty();
 	}
 
-	@FieldResolver((returns) => [UserType])
+	@FieldResolver(() => [UserType])
 	async users(
 		@Root() { id }: SchoolType,
 		@Ctx() { prisma }: Context
@@ -36,7 +36,7 @@ export default class SchoolResolver {
 		return await prisma.school.findUnique({ where: { id } }).users();
 	}
 
-	@FieldResolver((returns) => [CourseType])
+	@FieldResolver(() => [CourseType])
 	async courses(
 		@Root() { id }: SchoolType,
 		@Ctx() { prisma }: Context
@@ -44,9 +44,9 @@ export default class SchoolResolver {
 		return await prisma.school.findUnique({ where: { id } }).courses();
 	}
 
-	@Query((returns) => SchoolType)
+	@Query(() => SchoolType)
 	async school(
-		@Arg('id', (type) => Int, { nullable: true }) id: number,
+		@Arg('id', () => Int, { nullable: true }) id: number,
 		@Arg('name', { nullable: true }) name: string,
 		@Ctx() { prisma }: Context
 	): Promise<SchoolType> {
@@ -55,9 +55,9 @@ export default class SchoolResolver {
 		});
 	}
 
-	@Query((returns) => [SchoolType])
+	@Query(() => [SchoolType])
 	async schools(
-		@Arg('facultyId', (type) => Int, { nullable: true }) facultyId: number,
+		@Arg('facultyId', () => Int, { nullable: true }) facultyId: number,
 		@Ctx() { prisma, user }: Context
 	): Promise<SchoolType[]> {
 		const args: Prisma.FindManySchoolArgs = {
@@ -68,7 +68,7 @@ export default class SchoolResolver {
 		return await prisma.school.findMany(args);
 	}
 
-	@Mutation((returns) => SchoolType)
+	@Mutation(() => SchoolType)
 	async addSchool(
 		@Arg('data') data: SchoolInput,
 		@Ctx() { prisma, user }: Context
@@ -84,9 +84,9 @@ export default class SchoolResolver {
 		});
 	}
 
-	@Mutation((returns) => SchoolType)
+	@Mutation(() => SchoolType)
 	async modifySchool(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Arg('data') data: SchoolInput,
 		@Ctx() { prisma, user }: Context
 	): Promise<SchoolType> {
@@ -98,9 +98,9 @@ export default class SchoolResolver {
 		});
 	}
 
-	@Mutation((returns) => SchoolType)
+	@Mutation(() => SchoolType)
 	async deleteSchool(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma, user }: Context
 	): Promise<SchoolType> {
 		if (user.role !== UserRole.ADMIN)

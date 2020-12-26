@@ -14,9 +14,9 @@ import ActivityType from '../types/Activity.type';
 import EnrollmentDetailType from '../types/EnrollmentDetail.type';
 import GradeType from '../types/Grade.type';
 
-@Resolver((of) => GradeType)
+@Resolver(() => GradeType)
 export default class GradeResolver {
-	@FieldResolver((returns) => ActivityType)
+	@FieldResolver(() => ActivityType)
 	async activity(
 		@Root() { id }: GradeType,
 		@Ctx() { prisma }: Context
@@ -24,28 +24,30 @@ export default class GradeResolver {
 		return await prisma.grade.findUnique({ where: { id } }).activity();
 	}
 
-	@FieldResolver((returns) => EnrollmentDetailType)
+	@FieldResolver(() => EnrollmentDetailType)
 	async enrollmentDetail(
 		@Root() { id }: GradeType,
 		@Ctx() { prisma }: Context
 	): Promise<EnrollmentDetailType> {
-		return await prisma.grade.findUnique({ where: { id } }).enrollmentDetail();
+		return await prisma.grade
+			.findUnique({ where: { id } })
+			.enrollmentDetail();
 	}
 
-	@Query((returns) => GradeType)
+	@Query(() => GradeType)
 	async grade(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<GradeType> {
 		return await prisma.grade.findUnique({ where: { id } });
 	}
 
-	@Query((returns) => [GradeType])
+	@Query(() => [GradeType])
 	async grades(@Ctx() { prisma }: Context): Promise<GradeType[]> {
 		return await prisma.grade.findMany();
 	}
 
-	@Mutation((returns) => GradeType)
+	@Mutation(() => GradeType)
 	async addGrade(
 		@Arg('data') data: GradeInput,
 		@Ctx() { prisma }: Context
@@ -61,9 +63,9 @@ export default class GradeResolver {
 		});
 	}
 
-	@Mutation((returns) => GradeType)
+	@Mutation(() => GradeType)
 	async modifyGrade(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Arg('data') data: GradeInput,
 		@Ctx() { prisma }: Context
 	): Promise<GradeType> {
@@ -77,9 +79,9 @@ export default class GradeResolver {
 		});
 	}
 
-	@Mutation((returns) => GradeType)
+	@Mutation(() => GradeType)
 	async deleteGrade(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<GradeType> {
 		return await prisma.grade.delete({ where: { id } });

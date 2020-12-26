@@ -4,15 +4,15 @@ import EnrollmentDetailType from '../types/EnrollmentDetail.type';
 @InputType()
 export default class EnrollmentDetailInput
 	implements Partial<EnrollmentDetailType> {
-	@Field((type) => Int, { nullable: true })
+	@Field(() => Int, { nullable: true })
 	averageGrade?: number;
 
 	@Field({ nullable: true })
 	state?: boolean;
 
-	@Field((type) => Int, { nullable: true })
+	@Field(() => Int, { nullable: true })
 	enrollmentId?: number;
 
-	@Field((type) => Int, { nullable: true })
+	@Field(() => Int, { nullable: true })
 	groupId?: number;
 }

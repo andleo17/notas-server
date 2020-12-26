@@ -15,9 +15,9 @@ import EnrollmentDetailType from '../types/EnrollmentDetail.type';
 import SemesterType from '../types/Semester.type';
 import UserType from '../types/User.type';
 
-@Resolver((of) => EnrollmentType)
+@Resolver(() => EnrollmentType)
 export default class EnrollmentResolver {
-	@FieldResolver((returns) => UserType)
+	@FieldResolver(() => UserType)
 	async user(
 		@Root() { id }: EnrollmentType,
 		@Ctx() { prisma }: Context
@@ -25,7 +25,7 @@ export default class EnrollmentResolver {
 		return await prisma.enrollment.findUnique({ where: { id } }).user();
 	}
 
-	@FieldResolver((returns) => SemesterType)
+	@FieldResolver(() => SemesterType)
 	async semester(
 		@Root() { id }: EnrollmentType,
 		@Ctx() { prisma }: Context
@@ -33,7 +33,7 @@ export default class EnrollmentResolver {
 		return await prisma.enrollment.findUnique({ where: { id } }).semester();
 	}
 
-	@FieldResolver((returns) => [EnrollmentDetailType])
+	@FieldResolver(() => [EnrollmentDetailType])
 	async enrollmentDetails(
 		@Root() { id }: EnrollmentType,
 		@Ctx() { prisma }: Context
@@ -43,20 +43,20 @@ export default class EnrollmentResolver {
 			.enrollmentDetails();
 	}
 
-	@Query((returns) => EnrollmentType)
+	@Query(() => EnrollmentType)
 	async enrollment(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<EnrollmentType> {
 		return await prisma.enrollment.findUnique({ where: { id } });
 	}
 
-	@Query((returns) => [EnrollmentType])
+	@Query(() => [EnrollmentType])
 	async enrollments(@Ctx() { prisma }: Context): Promise<EnrollmentType[]> {
 		return await prisma.enrollment.findMany();
 	}
 
-	@Mutation((returns) => EnrollmentType)
+	@Mutation(() => EnrollmentType)
 	async addEnrollment(
 		@Arg('data') data: EnrollmentInput,
 		@Ctx() { prisma }: Context
@@ -71,9 +71,9 @@ export default class EnrollmentResolver {
 		});
 	}
 
-	@Mutation((returns) => EnrollmentType)
+	@Mutation(() => EnrollmentType)
 	async modifyEnrollment(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Arg('data') data: EnrollmentInput,
 		@Ctx() { prisma }: Context
 	): Promise<EnrollmentType> {
@@ -86,9 +86,9 @@ export default class EnrollmentResolver {
 		});
 	}
 
-	@Mutation((returns) => EnrollmentType)
+	@Mutation(() => EnrollmentType)
 	async deleteEnrollment(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<EnrollmentType> {
 		return await prisma.enrollment.delete({ where: { id } });

@@ -1,18 +1,18 @@
-import { Faculty } from '@prisma/client';
+import { Faculty } from '../../../prisma/@client';
 import { Field, ID, ObjectType } from 'type-graphql';
 import SchoolType from './School.type';
 
 @ObjectType('Faculty')
 export default class FacultyType implements Faculty {
-	@Field((type) => ID)
+	@Field(() => ID)
 	id: number;
 
-	@Field((type) => String)
+	@Field(() => String)
 	name: string;
 
-	@Field((type) => Boolean)
+	@Field(() => Boolean)
 	state: boolean;
 
-	@Field((type) => [SchoolType])
+	@Field(() => [SchoolType])
 	schools?: SchoolType[];
 }

@@ -1,4 +1,4 @@
-import { Group } from '@prisma/client';
+import { Group } from '../../../prisma/@client';
 import { Field, ID, Int, ObjectType } from 'type-graphql';
 import ActivityType from './Activity.type';
 import CourseType from './Course.type';
@@ -9,7 +9,7 @@ import TeacherType from './Teacher.type';
 
 @ObjectType('Group')
 export default class GroupType implements Group {
-	@Field((type) => ID)
+	@Field(() => ID)
 	id: number;
 
 	@Field()
@@ -21,27 +21,27 @@ export default class GroupType implements Group {
 	@Field()
 	courseCode: string;
 
-	@Field((type) => Int)
+	@Field(() => Int)
 	teacherId: number;
 
 	@Field()
 	semesterId: string;
 
-	@Field((type) => CourseType)
+	@Field(() => CourseType)
 	course?: CourseType;
 
-	@Field((type) => TeacherType)
+	@Field(() => TeacherType)
 	teacher?: TeacherType;
 
-	@Field((type) => SemesterType)
+	@Field(() => SemesterType)
 	semester?: SemesterType;
 
-	@Field((type) => [EnrollmentDetailType])
+	@Field(() => [EnrollmentDetailType])
 	enrollmentDetails?: EnrollmentDetailType[];
 
-	@Field((type) => [ActivityType])
+	@Field(() => [ActivityType])
 	activities?: ActivityType[];
 
-	@Field((type) => [ScheduleType])
+	@Field(() => [ScheduleType])
 	schedules?: ScheduleType[];
 }

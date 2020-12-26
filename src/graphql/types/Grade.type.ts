@@ -1,14 +1,14 @@
-import { Grade } from '@prisma/client';
+import { Grade } from '../../../prisma/@client';
 import { Field, Float, ID, Int, ObjectType } from 'type-graphql';
 import ActivityType from './Activity.type';
 import EnrollmentDetailType from './EnrollmentDetail.type';
 
 @ObjectType('Grade')
 export default class GradeType implements Grade {
-	@Field((type) => ID)
+	@Field(() => ID)
 	id: number;
 
-	@Field((type) => Float, { nullable: true })
+	@Field(() => Float, { nullable: true })
 	calification: number;
 
 	@Field()
@@ -17,15 +17,15 @@ export default class GradeType implements Grade {
 	@Field()
 	state: boolean;
 
-	@Field((type) => Int)
+	@Field(() => Int)
 	activityId: number;
 
-	@Field((type) => Int)
+	@Field(() => Int)
 	enrollmentDetailId: number;
 
-	@Field((type) => ActivityType)
+	@Field(() => ActivityType)
 	activity?: ActivityType;
 
-	@Field((type) => EnrollmentDetailType)
+	@Field(() => EnrollmentDetailType)
 	enrollmentDetail?: EnrollmentDetailType;
 }

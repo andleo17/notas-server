@@ -6,7 +6,7 @@ export default class ActivityInput implements Partial<ActivityType> {
 	@Field({ nullable: true })
 	name: string;
 
-	@Field((type) => Float, { nullable: true })
+	@Field(() => Float, { nullable: true })
 	weight: number;
 
 	@Field({ nullable: true })
@@ -15,12 +15,12 @@ export default class ActivityInput implements Partial<ActivityType> {
 	@Field({ nullable: true })
 	state?: boolean;
 
-	@Field((type) => Int, { nullable: true })
+	@Field(() => Int, { nullable: true })
 	typeActivityId?: number;
 
-	@Field((type) => Int, { nullable: true })
+	@Field(() => Int, { nullable: true })
 	activityId?: number;
 
-	@Field((type) => Int, { nullable: true })
+	@Field(() => Int, { nullable: true })
 	groupId?: number;
 }

@@ -1,4 +1,4 @@
-import { EnrollmentDetail } from '@prisma/client';
+import { EnrollmentDetail } from '../../../prisma/@client';
 import { Field, Float, ID, Int, ObjectType } from 'type-graphql';
 import EnrollmentType from './Enrollment.type';
 import GradeType from './Grade.type';
@@ -6,27 +6,27 @@ import GroupType from './Group.type';
 
 @ObjectType('EnrollmentDetail')
 export default class EnrollmentDetailType implements EnrollmentDetail {
-	@Field((type) => ID)
+	@Field(() => ID)
 	id: number;
 
-	@Field((type) => Float, { nullable: true })
+	@Field(() => Float, { nullable: true })
 	averageGrade: number;
 
 	@Field()
 	state: boolean;
 
-	@Field((type) => Int)
+	@Field(() => Int)
 	enrollmentId: number;
 
-	@Field((type) => Int)
+	@Field(() => Int)
 	groupId: number;
 
-	@Field((type) => EnrollmentType)
+	@Field(() => EnrollmentType)
 	enrollment?: EnrollmentType;
 
-	@Field((type) => GroupType)
+	@Field(() => GroupType)
 	group?: GroupType;
 
-	@Field((type) => [GradeType])
+	@Field(() => [GradeType])
 	grades?: GradeType[];
 }

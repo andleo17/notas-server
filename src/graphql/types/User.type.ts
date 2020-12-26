@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { User } from '../../../prisma/@client';
 import { IsEmail } from 'class-validator';
 import { Field, ID, Int, ObjectType } from 'type-graphql';
 import EnrollmentType from './Enrollment.type';
@@ -7,7 +7,7 @@ import SemesterType from './Semester.type';
 
 @ObjectType('User')
 export default class UserType implements User {
-	@Field((type) => ID)
+	@Field(() => ID)
 	id: number;
 
 	@Field()
@@ -41,15 +41,15 @@ export default class UserType implements User {
 	@Field()
 	semesterId: string;
 
-	@Field((type) => Int)
+	@Field(() => Int)
 	schoolId: number;
 
-	@Field((type) => SemesterType)
+	@Field(() => SemesterType)
 	semester?: SemesterType;
 
-	@Field((type) => SchoolType)
+	@Field(() => SchoolType)
 	school?: SchoolType;
 
-	@Field((type) => [EnrollmentType])
+	@Field(() => [EnrollmentType])
 	enrollments?: EnrollmentType[];
 }

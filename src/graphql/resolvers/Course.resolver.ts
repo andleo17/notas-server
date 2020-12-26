@@ -2,7 +2,6 @@ import {
 	Arg,
 	Ctx,
 	FieldResolver,
-	Int,
 	Mutation,
 	Query,
 	Resolver,
@@ -14,9 +13,9 @@ import CourseType from '../types/Course.type';
 import GroupType from '../types/Group.type';
 import SchoolType from '../types/School.type';
 
-@Resolver((of) => CourseType)
+@Resolver(() => CourseType)
 export default class CourseResolver {
-	@FieldResolver((returns) => SchoolType)
+	@FieldResolver(() => SchoolType)
 	async school(
 		@Root() { code }: CourseType,
 		@Ctx() { prisma }: Context
@@ -24,7 +23,7 @@ export default class CourseResolver {
 		return await prisma.course.findUnique({ where: { code } }).school();
 	}
 
-	@FieldResolver((returns) => [GroupType])
+	@FieldResolver(() => [GroupType])
 	async groups(
 		@Root() { code }: CourseType,
 		@Ctx() { prisma }: Context
@@ -32,7 +31,7 @@ export default class CourseResolver {
 		return await prisma.course.findUnique({ where: { code } }).groups();
 	}
 
-	@FieldResolver((returns) => [CourseType])
+	@FieldResolver(() => [CourseType])
 	async coursePrerequisites(
 		@Root() { code }: CourseType,
 		@Ctx() { prisma }: Context
@@ -42,7 +41,7 @@ export default class CourseResolver {
 			.coursePrerequisites({ orderBy: { name: 'asc' } });
 	}
 
-	@FieldResolver((returns) => [CourseType])
+	@FieldResolver(() => [CourseType])
 	async prerequisitesOf(
 		@Root() { code }: CourseType,
 		@Ctx() { prisma }: Context
@@ -52,7 +51,7 @@ export default class CourseResolver {
 			.prerequisitesOf({ orderBy: { name: 'asc' } });
 	}
 
-	@Query((returns) => CourseType)
+	@Query(() => CourseType)
 	async course(
 		@Arg('code', { nullable: true }) code: string,
 		@Ctx() { prisma }: Context
@@ -60,7 +59,7 @@ export default class CourseResolver {
 		return await prisma.course.findUnique({ where: { code } });
 	}
 
-	@Query((returns) => [CourseType])
+	@Query(() => [CourseType])
 	async courses(
 		@Arg('name', { nullable: true }) name: string,
 		@Arg('academicPhase', { nullable: true }) academicPhase: number,
@@ -77,7 +76,7 @@ export default class CourseResolver {
 		});
 	}
 
-	@Mutation((returns) => CourseType)
+	@Mutation(() => CourseType)
 	async addCourse(
 		@Arg('data') data: CourseInput,
 		@Ctx() { prisma }: Context
@@ -99,7 +98,7 @@ export default class CourseResolver {
 		});
 	}
 
-	@Mutation((returns) => CourseType)
+	@Mutation(() => CourseType)
 	async modifyCourse(
 		@Arg('code') code: string,
 		@Arg('data') data: CourseInput,
@@ -116,7 +115,7 @@ export default class CourseResolver {
 		});
 	}
 
-	@Mutation((returns) => CourseType)
+	@Mutation(() => CourseType)
 	async deleteCourse(
 		@Arg('code') code: string,
 		@Ctx() { prisma }: Context

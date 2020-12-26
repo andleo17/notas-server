@@ -3,7 +3,7 @@ import GradeType from '../types/Grade.type';
 
 @InputType()
 export default class GradeInput implements Partial<GradeType> {
-	@Field((type) => Float, { nullable: true })
+	@Field(() => Float, { nullable: true })
 	calification?: number;
 
 	@Field({ nullable: true })
@@ -12,9 +12,9 @@ export default class GradeInput implements Partial<GradeType> {
 	@Field({ nullable: true })
 	state?: boolean;
 
-	@Field((type) => Int, { nullable: true })
+	@Field(() => Int, { nullable: true })
 	activityId?: number;
 
-	@Field((type) => Int, { nullable: true })
+	@Field(() => Int, { nullable: true })
 	enrollmentDetailId?: number;
 }

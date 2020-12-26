@@ -21,9 +21,9 @@ import { AuthenticationError } from 'apollo-server';
 import { APP_SECRET } from '../../utils/env';
 import { BANNED, NO_ADMIN } from '../../utils/errors';
 
-@Resolver((of) => UserType)
+@Resolver(() => UserType)
 export default class UserResolver {
-	@FieldResolver((returns) => SemesterType)
+	@FieldResolver(() => SemesterType)
 	async semester(
 		@Root() { id }: UserType,
 		@Ctx() { prisma }: Context
@@ -31,7 +31,7 @@ export default class UserResolver {
 		return await prisma.user.findUnique({ where: { id } }).semester();
 	}
 
-	@FieldResolver((returns) => SchoolType)
+	@FieldResolver(() => SchoolType)
 	async school(
 		@Root() { id }: UserType,
 		@Ctx() { prisma }: Context
@@ -39,7 +39,7 @@ export default class UserResolver {
 		return await prisma.user.findUnique({ where: { id } }).school();
 	}
 
-	@FieldResolver((returns) => [EnrollmentType])
+	@FieldResolver(() => [EnrollmentType])
 	async enrollments(
 		@Root() { id }: UserType,
 		@Ctx() { prisma }: Context
@@ -47,23 +47,23 @@ export default class UserResolver {
 		return await prisma.user.findUnique({ where: { id } }).enrollments();
 	}
 
-	@Query((returns) => UserType)
+	@Query(() => UserType)
 	async user(
-		@Arg('id', (type) => Int, { nullable: true }) id: number,
+		@Arg('id', () => Int, { nullable: true }) id: number,
 		@Ctx() { prisma, user }: Context
 	): Promise<UserType> {
 		if (user.role === UserRole.USER) id = user.id;
 		return await prisma.user.findUnique({ where: { id } });
 	}
 
-	@Query((returns) => [UserType])
+	@Query(() => [UserType])
 	async users(@Ctx() { prisma, user }: Context): Promise<UserType[]> {
 		if (user.role !== UserRole.ADMIN)
 			throw new AuthenticationError(NO_ADMIN);
 		return await prisma.user.findMany();
 	}
 
-	@Query((returns) => AuthenticationPayloadType)
+	@Query(() => AuthenticationPayloadType)
 	async login(
 		@Arg('nickname') nickname: string,
 		@Arg('password') password: string,
@@ -86,7 +86,7 @@ export default class UserResolver {
 		return { user: userLogged, token };
 	}
 
-	@Mutation((returns) => AuthenticationPayloadType)
+	@Mutation(() => AuthenticationPayloadType)
 	async signup(
 		@Arg('data') data: UserInput,
 		@Ctx() { prisma, user }: Context
@@ -113,9 +113,9 @@ export default class UserResolver {
 		return { token, user: userCreated };
 	}
 
-	@Mutation((returns) => UserType)
+	@Mutation(() => UserType)
 	async modifyUser(
-		@Arg('id', (type) => Int, { nullable: true }) id: number,
+		@Arg('id', () => Int, { nullable: true }) id: number,
 		@Arg('data') data: UserInput,
 		@Ctx() { prisma, user }: Context
 	): Promise<UserType> {
@@ -140,9 +140,9 @@ export default class UserResolver {
 		});
 	}
 
-	@Mutation((returns) => UserType)
+	@Mutation(() => UserType)
 	async deleteUser(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma, user }: Context
 	): Promise<UserType> {
 		if (user.role !== UserRole.ADMIN)

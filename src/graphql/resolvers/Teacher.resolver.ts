@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from '../../../prisma/@client';
 import {
 	Arg,
 	Ctx,
@@ -14,9 +14,9 @@ import TeacherInput from '../inputs/Teacher.input';
 import GroupType from '../types/Group.type';
 import TeacherType from '../types/Teacher.type';
 
-@Resolver((of) => TeacherType)
+@Resolver(() => TeacherType)
 export default class TeacherResolver {
-	@FieldResolver((returns) => [GroupType])
+	@FieldResolver(() => [GroupType])
 	async groups(
 		@Root() { id }: TeacherType,
 		@Ctx() { prisma }: Context
@@ -24,15 +24,15 @@ export default class TeacherResolver {
 		return await prisma.teacher.findUnique({ where: { id } }).groups();
 	}
 
-	@Query((returns) => TeacherType)
+	@Query(() => TeacherType)
 	async teacher(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<TeacherType> {
 		return await prisma.teacher.findUnique({ where: { id } });
 	}
 
-	@Query((returns) => [TeacherType])
+	@Query(() => [TeacherType])
 	async teachers(
 		@Arg('names') names: string,
 		@Ctx() { prisma, user }: Context
@@ -50,7 +50,7 @@ export default class TeacherResolver {
 		return await prisma.teacher.findMany(args);
 	}
 
-	@Mutation((returns) => TeacherType)
+	@Mutation(() => TeacherType)
 	async addTeacher(
 		@Arg('data') data: TeacherInput,
 		@Ctx() { prisma }: Context
@@ -64,9 +64,9 @@ export default class TeacherResolver {
 		});
 	}
 
-	@Mutation((returns) => TeacherType)
+	@Mutation(() => TeacherType)
 	async modifyTeacher(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Arg('data') data: TeacherInput,
 		@Ctx() { prisma }: Context
 	): Promise<TeacherType> {
@@ -80,9 +80,9 @@ export default class TeacherResolver {
 		});
 	}
 
-	@Mutation((returns) => TeacherType)
+	@Mutation(() => TeacherType)
 	async deleteTeacher(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<TeacherType> {
 		return await prisma.teacher.delete({ where: { id } });

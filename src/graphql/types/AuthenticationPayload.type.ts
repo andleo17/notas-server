@@ -3,7 +3,7 @@ import UserType from './User.type';
 
 @ObjectType('AuthenticationPayload')
 export default class AuthenticationPayloadType {
-	@Field((returns) => UserType)
+	@Field(() => UserType)
 	user: UserType;
 
 	@Field()

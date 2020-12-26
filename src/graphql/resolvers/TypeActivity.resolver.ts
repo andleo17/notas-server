@@ -1,4 +1,3 @@
-import { Prisma } from '@prisma/client';
 import { AuthenticationError } from 'apollo-server';
 import {
 	Arg,
@@ -16,9 +15,9 @@ import TypeActivityInput from '../inputs/TypeActivity.input';
 import ActivityType from '../types/Activity.type';
 import TypeActivityType from '../types/TypeActivity.type';
 
-@Resolver((of) => TypeActivityType)
+@Resolver(() => TypeActivityType)
 export default class TypeActivityResolver {
-	@FieldResolver((returns) => [ActivityType])
+	@FieldResolver(() => [ActivityType])
 	async activities(
 		@Root() { id }: TypeActivityType,
 		@Ctx() { prisma }: Context
@@ -28,22 +27,22 @@ export default class TypeActivityResolver {
 			.activities();
 	}
 
-	@Query((returns) => TypeActivityType)
+	@Query(() => TypeActivityType)
 	async typeActivity(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<TypeActivityType> {
 		return await prisma.typeActivity.findUnique({ where: { id } });
 	}
 
-	@Query((returns) => [TypeActivityType])
+	@Query(() => [TypeActivityType])
 	async typesActivity(
 		@Ctx() { prisma }: Context
 	): Promise<TypeActivityType[]> {
 		return await prisma.typeActivity.findMany({ orderBy: { name: 'asc' } });
 	}
 
-	@Mutation((returns) => TypeActivityType)
+	@Mutation(() => TypeActivityType)
 	async addTypeActivity(
 		@Arg('data') data: TypeActivityInput,
 		@Ctx() { prisma, user }: Context
@@ -53,9 +52,9 @@ export default class TypeActivityResolver {
 		return await prisma.typeActivity.create({ data: { name: data.name } });
 	}
 
-	@Mutation((returns) => TypeActivityType)
+	@Mutation(() => TypeActivityType)
 	async modifyTypeActivity(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Arg('data') data: TypeActivityInput,
 		@Ctx() { prisma, user }: Context
 	): Promise<TypeActivityType> {
@@ -67,9 +66,9 @@ export default class TypeActivityResolver {
 		});
 	}
 
-	@Mutation((returns) => TypeActivityType)
+	@Mutation(() => TypeActivityType)
 	async deleteTypeActivity(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma, user }: Context
 	): Promise<TypeActivityType> {
 		if (user.role !== UserRole.ADMIN)

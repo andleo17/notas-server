@@ -1,4 +1,4 @@
-import { Activity } from '@prisma/client';
+import { Activity } from '../../../prisma/@client';
 import { Field, Float, ID, Int, ObjectType } from 'type-graphql';
 import GradeType from './Grade.type';
 import GroupType from './Group.type';
@@ -6,13 +6,13 @@ import TypeActivityType from './TypeActivity.type';
 
 @ObjectType('Activity')
 export default class ActivityType implements Activity {
-	@Field((type) => ID)
+	@Field(() => ID)
 	id: number;
 
 	@Field()
 	name: string;
 
-	@Field((type) => Float)
+	@Field(() => Float)
 	weight: number;
 
 	@Field({ nullable: true })
@@ -21,27 +21,27 @@ export default class ActivityType implements Activity {
 	@Field()
 	state: boolean;
 
-	@Field((type) => Int)
+	@Field(() => Int)
 	typeActivityId: number;
 
-	@Field((type) => Int, { nullable: true })
+	@Field(() => Int, { nullable: true })
 	activityId: number;
 
-	@Field((type) => Int)
+	@Field(() => Int)
 	groupId: number;
 
-	@Field((type) => TypeActivityType)
+	@Field(() => TypeActivityType)
 	typeActivity?: TypeActivityType;
 
-	@Field((type) => ActivityType, { nullable: true })
+	@Field(() => ActivityType, { nullable: true })
 	parentActivity?: ActivityType;
 
-	@Field((type) => GroupType)
+	@Field(() => GroupType)
 	group?: GroupType;
 
-	@Field((type) => [ActivityType])
+	@Field(() => [ActivityType])
 	childActivities?: ActivityType[];
 
-	@Field((type) => [GradeType])
+	@Field(() => [GradeType])
 	grades?: GradeType[];
 }

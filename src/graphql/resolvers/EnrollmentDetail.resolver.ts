@@ -15,9 +15,9 @@ import EnrollmentDetailType from '../types/EnrollmentDetail.type';
 import GradeType from '../types/Grade.type';
 import GroupType from '../types/Group.type';
 
-@Resolver((of) => EnrollmentDetailType)
+@Resolver(() => EnrollmentDetailType)
 export default class EnrollmentDetailResolver {
-	@FieldResolver((returns) => EnrollmentType)
+	@FieldResolver(() => EnrollmentType)
 	async enrollment(
 		@Root() { id }: EnrollmentDetailType,
 		@Ctx() { prisma }: Context
@@ -27,15 +27,17 @@ export default class EnrollmentDetailResolver {
 			.enrollment();
 	}
 
-	@FieldResolver((returns) => GroupType)
+	@FieldResolver(() => GroupType)
 	async group(
 		@Root() { id }: EnrollmentDetailType,
 		@Ctx() { prisma }: Context
 	): Promise<GroupType> {
-		return await prisma.enrollmentDetail.findUnique({ where: { id } }).group();
+		return await prisma.enrollmentDetail
+			.findUnique({ where: { id } })
+			.group();
 	}
 
-	@FieldResolver((returns) => [GradeType])
+	@FieldResolver(() => [GradeType])
 	async grades(
 		@Root() { id }: EnrollmentDetailType,
 		@Ctx() { prisma }: Context
@@ -45,22 +47,22 @@ export default class EnrollmentDetailResolver {
 			.grades();
 	}
 
-	@Query((returns) => EnrollmentDetailType)
+	@Query(() => EnrollmentDetailType)
 	async enrollmentDetail(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<EnrollmentDetailType> {
 		return await prisma.enrollmentDetail.findUnique({ where: { id } });
 	}
 
-	@Query((returns) => [EnrollmentDetailType])
+	@Query(() => [EnrollmentDetailType])
 	async enrollmentDetails(
 		@Ctx() { prisma }: Context
 	): Promise<EnrollmentDetailType[]> {
 		return await prisma.enrollmentDetail.findMany();
 	}
 
-	@Mutation((returns) => EnrollmentDetailType)
+	@Mutation(() => EnrollmentDetailType)
 	async addEnrollmentDetail(
 		@Arg('data') data: EnrollmentDetailInput,
 		@Ctx() { prisma }: Context
@@ -73,9 +75,9 @@ export default class EnrollmentDetailResolver {
 		});
 	}
 
-	@Mutation((returns) => EnrollmentDetailType)
+	@Mutation(() => EnrollmentDetailType)
 	async modifyEnrollmentDetail(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Arg('data') data: EnrollmentDetailInput,
 		@Ctx() { prisma }: Context
 	): Promise<EnrollmentDetailType> {
@@ -88,9 +90,9 @@ export default class EnrollmentDetailResolver {
 		});
 	}
 
-	@Mutation((returns) => EnrollmentDetailType)
+	@Mutation(() => EnrollmentDetailType)
 	async deleteEnrollmentDetail(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<EnrollmentDetailType> {
 		return await prisma.enrollmentDetail.delete({

@@ -3,13 +3,13 @@ import EnrollmentType from '../types/Enrollment.type';
 
 @InputType()
 export default class EnrollmentInput implements Partial<EnrollmentType> {
-	@Field((type) => Int, { nullable: true })
+	@Field(() => Int, { nullable: true })
 	weightedAverage?: number;
 
 	@Field({ nullable: true })
 	state?: boolean;
 
-	@Field((type) => Int, { nullable: true })
+	@Field(() => Int, { nullable: true })
 	userId?: number;
 
 	@Field({ nullable: true })

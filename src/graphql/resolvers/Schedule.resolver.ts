@@ -13,9 +13,9 @@ import ScheduleInput from '../inputs/Schedule.input';
 import GroupType from '../types/Group.type';
 import ScheduleType from '../types/Schedule.type';
 
-@Resolver((of) => ScheduleType)
+@Resolver(() => ScheduleType)
 export default class ScheduleResolver {
-	@FieldResolver((returns) => GroupType)
+	@FieldResolver(() => GroupType)
 	async group(
 		@Root() { id }: ScheduleType,
 		@Ctx() { prisma }: Context
@@ -23,20 +23,20 @@ export default class ScheduleResolver {
 		return await prisma.schedule.findUnique({ where: { id } }).group();
 	}
 
-	@Query((returns) => ScheduleType)
+	@Query(() => ScheduleType)
 	async schedule(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<ScheduleType> {
 		return await prisma.schedule.findUnique({ where: { id } });
 	}
 
-	@Query((returns) => [ScheduleType])
+	@Query(() => [ScheduleType])
 	async schedules(@Ctx() { prisma }: Context): Promise<ScheduleType[]> {
 		return await prisma.schedule.findMany();
 	}
 
-	@Mutation((returns) => ScheduleType)
+	@Mutation(() => ScheduleType)
 	async addSchedule(
 		@Arg('data') data: ScheduleInput,
 		@Ctx() { prisma }: Context
@@ -52,9 +52,9 @@ export default class ScheduleResolver {
 		});
 	}
 
-	@Mutation((returns) => ScheduleType)
+	@Mutation(() => ScheduleType)
 	async modifySchedule(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Arg('data') data: ScheduleInput,
 		@Ctx() { prisma }: Context
 	): Promise<ScheduleType> {
@@ -69,9 +69,9 @@ export default class ScheduleResolver {
 		});
 	}
 
-	@Mutation((returns) => ScheduleType)
+	@Mutation(() => ScheduleType)
 	async deleteSchedule(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<ScheduleType> {
 		return await prisma.schedule.delete({ where: { id } });

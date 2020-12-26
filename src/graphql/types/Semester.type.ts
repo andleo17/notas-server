@@ -1,4 +1,4 @@
-import { Semester } from '@prisma/client';
+import { Semester } from '../../../prisma/@client';
 import { Field, ID, ObjectType } from 'type-graphql';
 import EnrollmentType from './Enrollment.type';
 import GroupType from './Group.type';
@@ -6,7 +6,7 @@ import UserType from './User.type';
 
 @ObjectType('Semester')
 export default class SemesterType implements Semester {
-	@Field((type) => ID)
+	@Field(() => ID)
 	name: string;
 
 	@Field({ nullable: true })
@@ -18,12 +18,12 @@ export default class SemesterType implements Semester {
 	@Field()
 	state: boolean;
 
-	@Field((type) => [UserType])
+	@Field(() => [UserType])
 	users?: UserType[];
 
-	@Field((type) => [GroupType])
+	@Field(() => [GroupType])
 	groups?: GroupType[];
 
-	@Field((type) => [EnrollmentType])
+	@Field(() => [EnrollmentType])
 	enrollments?: EnrollmentType[];
 }

@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from '../../../prisma/@client';
 import { AuthenticationError } from 'apollo-server';
 import {
 	Arg,
@@ -16,9 +16,9 @@ import FacultyInput from '../inputs/Faculty.input';
 import FacultyType from '../types/Faculty.type';
 import SchoolType from '../types/School.type';
 
-@Resolver((of) => FacultyType)
+@Resolver(() => FacultyType)
 export default class FacultyResolver {
-	@FieldResolver((returns) => [SchoolType])
+	@FieldResolver(() => [SchoolType])
 	async schools(
 		@Root() { id }: FacultyType,
 		@Ctx() { prisma }: Context
@@ -26,9 +26,9 @@ export default class FacultyResolver {
 		return await prisma.faculty.findUnique({ where: { id } }).schools();
 	}
 
-	@Query((returns) => FacultyType)
+	@Query(() => FacultyType)
 	async faculty(
-		@Arg('id', (type) => Int, { nullable: true }) id: number,
+		@Arg('id', () => Int, { nullable: true }) id: number,
 		@Arg('name', { nullable: true }) name: string,
 		@Ctx()
 		{ prisma }: Context
@@ -38,14 +38,14 @@ export default class FacultyResolver {
 		});
 	}
 
-	@Query((returns) => [FacultyType])
+	@Query(() => [FacultyType])
 	async faculties(@Ctx() { prisma, user }: Context): Promise<FacultyType[]> {
 		const args: Prisma.FindManyFacultyArgs = { orderBy: { name: 'asc' } };
 		if (user.role === UserRole.USER) args.where = { state: true };
 		return await prisma.faculty.findMany(args);
 	}
 
-	@Mutation((returns) => FacultyType)
+	@Mutation(() => FacultyType)
 	async addFaculty(
 		@Arg('data') data: FacultyInput,
 		@Ctx() { prisma, user }: Context
@@ -57,9 +57,9 @@ export default class FacultyResolver {
 		});
 	}
 
-	@Mutation((returns) => FacultyType)
+	@Mutation(() => FacultyType)
 	async modifyFaculty(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Arg('data') data: FacultyInput,
 		@Ctx() { prisma, user }: Context
 	): Promise<FacultyType> {
@@ -71,9 +71,9 @@ export default class FacultyResolver {
 		});
 	}
 
-	@Mutation((returns) => FacultyType)
+	@Mutation(() => FacultyType)
 	async deleteFaculty(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma, user }: Context
 	): Promise<FacultyType> {
 		if (user.role !== UserRole.ADMIN)

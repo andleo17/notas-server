@@ -18,9 +18,9 @@ import ScheduleType from '../types/Schedule.type';
 import SemesterType from '../types/Semester.type';
 import TeacherType from '../types/Teacher.type';
 
-@Resolver((of) => GroupType)
+@Resolver(() => GroupType)
 export default class GroupResolver {
-	@FieldResolver((returns) => CourseType)
+	@FieldResolver(() => CourseType)
 	async course(
 		@Root() { id }: GroupType,
 		@Ctx() { prisma }: Context
@@ -28,7 +28,7 @@ export default class GroupResolver {
 		return await prisma.group.findUnique({ where: { id } }).course();
 	}
 
-	@FieldResolver((returns) => TeacherType)
+	@FieldResolver(() => TeacherType)
 	async teacher(
 		@Root() { id }: GroupType,
 		@Ctx() { prisma }: Context
@@ -36,7 +36,7 @@ export default class GroupResolver {
 		return await prisma.group.findUnique({ where: { id } }).teacher();
 	}
 
-	@FieldResolver((returns) => SemesterType)
+	@FieldResolver(() => SemesterType)
 	async semester(
 		@Root() { id }: GroupType,
 		@Ctx() { prisma }: Context
@@ -44,7 +44,7 @@ export default class GroupResolver {
 		return await prisma.group.findUnique({ where: { id } }).semester();
 	}
 
-	@FieldResolver((returns) => [EnrollmentDetailType])
+	@FieldResolver(() => [EnrollmentDetailType])
 	async enrollmentDetails(
 		@Root() { id }: GroupType,
 		@Ctx() { prisma }: Context
@@ -54,7 +54,7 @@ export default class GroupResolver {
 			.enrollmentDetails();
 	}
 
-	@FieldResolver((returns) => [ActivityType])
+	@FieldResolver(() => [ActivityType])
 	async activities(
 		@Root() { id }: GroupType,
 		@Ctx() { prisma }: Context
@@ -62,7 +62,7 @@ export default class GroupResolver {
 		return await prisma.group.findUnique({ where: { id } }).activities();
 	}
 
-	@FieldResolver((returns) => [ScheduleType])
+	@FieldResolver(() => [ScheduleType])
 	async schedules(
 		@Root() { id }: GroupType,
 		@Ctx() { prisma }: Context
@@ -70,20 +70,20 @@ export default class GroupResolver {
 		return await prisma.group.findUnique({ where: { id } }).schedules();
 	}
 
-	@Query((returns) => GroupType)
+	@Query(() => GroupType)
 	async group(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<GroupType> {
 		return await prisma.group.findUnique({ where: { id } });
 	}
 
-	@Query((returns) => [GroupType])
+	@Query(() => [GroupType])
 	async groups(@Ctx() { prisma }: Context): Promise<GroupType[]> {
 		return await prisma.group.findMany();
 	}
 
-	@Mutation((returns) => GroupType)
+	@Mutation(() => GroupType)
 	async addGroup(
 		@Arg('data') data: GroupInput,
 		@Ctx() { prisma }: Context
@@ -99,9 +99,9 @@ export default class GroupResolver {
 		});
 	}
 
-	@Mutation((returns) => GroupType)
+	@Mutation(() => GroupType)
 	async modifyGroup(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Arg('data') data: GroupInput,
 		@Ctx() { prisma }: Context
 	): Promise<GroupType> {
@@ -111,9 +111,9 @@ export default class GroupResolver {
 		});
 	}
 
-	@Mutation((returns) => GroupType)
+	@Mutation(() => GroupType)
 	async deleteGroup(
-		@Arg('id', (type) => Int) id: number,
+		@Arg('id', () => Int) id: number,
 		@Ctx() { prisma }: Context
 	): Promise<GroupType> {
 		return prisma.group.delete({ where: { id } });

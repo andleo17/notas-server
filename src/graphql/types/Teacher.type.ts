@@ -1,10 +1,10 @@
-import { Teacher } from '@prisma/client';
+import { Teacher } from '../../../prisma/@client';
 import { Field, ID, ObjectType } from 'type-graphql';
 import GroupType from './Group.type';
 
 @ObjectType('Teacher')
 export default class TeacherType implements Teacher {
-	@Field((type) => ID)
+	@Field(() => ID)
 	id: number;
 
 	@Field()
@@ -16,6 +16,6 @@ export default class TeacherType implements Teacher {
 	@Field()
 	state: boolean;
 
-	@Field((type) => [GroupType])
+	@Field(() => [GroupType])
 	groups?: GroupType[];
 }
