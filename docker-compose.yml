@@ -6,14 +6,28 @@ services:
             POSTGRES_PASSWORD: postgres
             POSTGRES_USER: postgres
             POSTGRES_DB: notas
-        volumes:
-            - ./../db_data:/var/lib/postgresql/data
         restart: always
+        volumes:
+            - db_data:/var/lib/postgresql/data
         ports:
             - '5432:5432'
-    server:
-        image: app-notas
+        container_name: db
+    migrate:
+        build: ./prisma
         depends_on:
             - db
+        env_file:
+            - .env
+        container_name: app-notas-migrate
+    api:
+        build: .
+        depends_on:
+            - db
+            - migrate
         ports:
             - '4000:4000'
+        env_file:
+            - .env
+        container_name: app-notas
+volumes:
+    db_data:
