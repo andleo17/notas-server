@@ -1,9 +1,8 @@
-import { Schedule } from '../../../prisma/@client';
 import { Field, ID, Int, ObjectType } from 'type-graphql';
-import GroupType from './Group.type';
+import { Group } from './Group';
 
-@ObjectType('Schedule')
-export default class ScheduleType implements Schedule {
+@ObjectType()
+export class Schedule {
 	@Field(() => ID)
 	id: number;
 
@@ -22,6 +21,6 @@ export default class ScheduleType implements Schedule {
 	@Field(() => Int)
 	groupId: number;
 
-	@Field(() => GroupType)
-	group?: GroupType;
+	@Field(() => Group)
+	group?: Group;
 }

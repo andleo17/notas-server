@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -8,32 +5,44 @@ datasource db {
 
 generator client {
   provider      = "prisma-client-js"
-  output        = "./@client"
   binaryTargets = "native"
 }
 
+/// Facultades de la universidad.
 model Faculty {
+  /// Identificador de la facultad en la base de datos.
   id      Int      @id @default(autoincrement())
+  /// Nombre de la facultad.
   name    String   @unique
+  /// Determina si la facultad se encuentra disponible aún.
   state   Boolean  @default(true)
+  /// Lista de escuelas pertenecientes a la facultad.
   schools School[]
 }
 
+/// Escuelas de la universidad.
 model School {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  state     Boolean  @default(true)
-  facultyId Int
-  faculty   Faculty  @relation(fields: [facultyId], references: [id])
-  users     User[]
-  courses   Course[]
+  /// Identificador de una escuela en la base de datos.
+  id          Int                @id @default(autoincrement())
+  /// Nombre de la escuela.
+  name        String             @unique
+  /// Determina si la escuela aún está disponible aún.
+  state       Boolean            @default(true)
+  /// Identificador de la facultad a la que pertenece la escuela.
+  facultyId   Int
+  /// Factulad a la que pertenece la escuela.
+  faculty     Faculty            @relation(fields: [facultyId], references: [id])
+  /// Usuarios pertenecientes a la escuela.
+  users       User[]
+  /// Planes de estudios con los que cuenta la escuela.
+  curriculums SchoolCurriculum[]
 }
 
 model Semester {
   name        String       @id
   startDate   DateTime?
   finishDate  DateTime?
-  state       Boolean      @default(false)
+  current     Boolean      @default(false)
   users       User[]
   groups      Group[]
   enrollments Enrollment[]
@@ -43,38 +52,52 @@ model User {
   id          Int          @id @default(autoincrement())
   nickname    String       @unique
   password    String
-  email       String       @unique
   name        String
   lastname    String
   birthDate   DateTime
-  photo       String
-  genre       Boolean
   state       Boolean      @default(true)
   semesterId  String
-  semester    Semester     @relation(fields: [semesterId], references: [name])
   schoolId    Int
+  semesterIn  Semester     @relation(fields: [semesterId], references: [name])
   school      School       @relation(fields: [schoolId], references: [id])
   enrollments Enrollment[]
 }
 
+model Curriculum {
+  id      Int                @id @default(autoincrement())
+  name    String             @unique
+  state   Boolean            @default(true)
+  schools SchoolCurriculum[]
+}
+
+model SchoolCurriculum {
+  schoolId     Int
+  curriculumId Int
+  school       School     @relation(fields: [schoolId], references: [id])
+  curriculum   Curriculum @relation(fields: [curriculumId], references: [id])
+  courses      Course[]
+
+  @@id([schoolId, curriculumId])
+}
+
 model Course {
-  code                String   @id
+  code                String           @id
   name                String
   credits             Int
   academicPhase       Int
-  state               Boolean  @default(true)
+  state               Boolean          @default(true)
   schoolId            Int
-  school              School   @relation(fields: [schoolId], references: [id])
+  curriculumId        Int
+  schoolCurriculum    SchoolCurriculum @relation(fields: [schoolId, curriculumId], references: [schoolId, curriculumId])
   groups              Group[]
-  coursePrerequisites Course[] @relation("CoursesPrerequisites", references: [code])
-  prerequisitesOf     Course[] @relation("CoursesPrerequisites", references: [code])
+  coursePrerequisites Course[]         @relation("CoursesPrerequisites", references: [code])
+  prerequisitesOf     Course[]         @relation("CoursesPrerequisites", references: [code])
 }
 
 model Teacher {
   id       Int     @id @default(autoincrement())
   name     String
   lastname String
-  state    Boolean @default(true)
   groups   Group[]
 }
 
@@ -83,10 +106,10 @@ model Group {
   denomination      String
   state             Boolean            @default(true)
   courseCode        String
-  course            Course             @relation(fields: [courseCode], references: [code])
   teacherId         Int
-  teacher           Teacher            @relation(fields: [teacherId], references: [id])
   semesterId        String
+  course            Course             @relation(fields: [courseCode], references: [code])
+  teacher           Teacher            @relation(fields: [teacherId], references: [id])
   semester          Semester           @relation(fields: [semesterId], references: [name])
   enrollmentDetails EnrollmentDetail[]
   activities        Activity[]
@@ -100,8 +123,8 @@ model Enrollment {
   weightedAverage   Int?
   state             Boolean            @default(true)
   userId            Int
-  user              User               @relation(fields: [userId], references: [id])
   semesterId        String
+  user              User               @relation(fields: [userId], references: [id])
   semester          Semester           @relation(fields: [semesterId], references: [name])
   enrollmentDetails EnrollmentDetail[]
 
@@ -113,8 +136,8 @@ model EnrollmentDetail {
   averageGrade Float?
   state        Boolean    @default(true)
   enrollmentId Int
-  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id])
   groupId      Int
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id])
   group        Group      @relation(fields: [groupId], references: [id])
   grades       Grade[]
 
@@ -134,26 +157,25 @@ model Activity {
   presentationDate DateTime?
   state            Boolean      @default(true)
   typeActivityId   Int
-  typeActivity     TypeActivity @relation(fields: [typeActivityId], references: [id])
   activityId       Int?
-  parentActivity   Activity?    @relation("ActivityToActivity", fields: [activityId], references: [id])
   groupId          Int
+  typeActivity     TypeActivity @relation(fields: [typeActivityId], references: [id])
+  parentActivity   Activity?    @relation("ActivityToActivity", fields: [activityId], references: [id])
   group            Group        @relation(fields: [groupId], references: [id])
   childActivities  Activity[]   @relation("ActivityToActivity")
   grades           Grade[]
 }
 
 model Grade {
-  id                 Int              @id @default(autoincrement())
+  activityId         Int
+  enrollmentDetailId Int
   calification       Float?
   confirmated        Boolean          @default(false)
   state              Boolean          @default(true)
-  activityId         Int
   activity           Activity         @relation(fields: [activityId], references: [id])
-  enrollmentDetailId Int
   enrollmentDetail   EnrollmentDetail @relation(fields: [enrollmentDetailId], references: [id])
 
-  @@unique([activityId, enrollmentDetailId])
+  @@id([activityId, enrollmentDetailId])
 }
 
 model Schedule {

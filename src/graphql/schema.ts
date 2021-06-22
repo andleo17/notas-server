@@ -1,9 +1,16 @@
-import { buildSchema } from 'type-graphql';
+import { buildSchema, ResolverData } from 'type-graphql';
 import { join } from 'path';
+import { APIContext } from '../utils/context';
+import { GraphQLSchema } from 'graphql';
 
-export async function createSchema() {
-	return await buildSchema({
+const createSchema = async (): Promise<GraphQLSchema> => {
+	return buildSchema({
 		resolvers: [__dirname + '/resolvers/*.{ts,js}'],
 		emitSchemaFile: join(__dirname, 'schema.gql'),
+		authChecker: ({ context }: ResolverData<APIContext>) => {
+			return !!context.user;
+		},
 	});
-}
+};
+
+export default createSchema;

@@ -1,20 +1,29 @@
+import { ApolloServer } from 'apollo-server-express';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import Express from 'express';
 import 'reflect-metadata';
-import { ApolloServer } from 'apollo-server';
-import { createContext } from './context';
-import { createSchema } from './graphql/schema';
+import createSchema from './graphql/schema';
+import { createContext } from './utils/context';
+import { APP_PORT } from './utils/env';
 
-async function bootstrap() {
+const main = async () => {
 	const server: ApolloServer = new ApolloServer({
 		schema: await createSchema(),
 		context: createContext,
 	});
 
-	server
-		.listen({ port: process.env.PORT || 4000 })
-		.then(({ url, subscriptionsUrl }) => {
-			console.log(`Server ready at ${url}`);
-			console.log(`Subscriptions on ${subscriptionsUrl}`);
-		});
-}
+	await server.start();
 
-bootstrap();
+	const app = Express();
+
+	app.use(cors({ credentials: true, origin: '*' })).use(cookieParser());
+
+	server.applyMiddleware({ app });
+
+	app.listen(APP_PORT, () => {
+		console.log(`Server ready at http://localhost:${APP_PORT}/`);
+	});
+};
+
+main();
