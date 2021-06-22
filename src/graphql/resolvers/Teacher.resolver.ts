@@ -1,43 +1,23 @@
-import { Prisma } from '../../../prisma/@client';
-import {
-	Arg,
-	Ctx,
-	FieldResolver,
-	Int,
-	Mutation,
-	Query,
-	Resolver,
-	Root,
-} from 'type-graphql';
-import { Context, UserRole } from '../../context';
-import TeacherInput from '../inputs/Teacher.input';
-import GroupType from '../types/Group.type';
-import TeacherType from '../types/Teacher.type';
+import { Arg, Ctx, Int, Query, Resolver } from 'type-graphql';
+import { APIContext } from '../../utils/context';
+import { Teacher } from '../models/Teacher';
 
-@Resolver(() => TeacherType)
+@Resolver(() => Teacher)
 export default class TeacherResolver {
-	@FieldResolver(() => [GroupType])
-	async groups(
-		@Root() { id }: TeacherType,
-		@Ctx() { prisma }: Context
-	): Promise<GroupType[]> {
-		return await prisma.teacher.findUnique({ where: { id } }).groups();
-	}
-
-	@Query(() => TeacherType)
+	@Query(() => Teacher)
 	async teacher(
 		@Arg('id', () => Int) id: number,
-		@Ctx() { prisma }: Context
-	): Promise<TeacherType> {
-		return await prisma.teacher.findUnique({ where: { id } });
+		@Ctx() { prisma }: APIContext
+	): Promise<Teacher> {
+		return prisma.teacher.findUnique({ where: { id } });
 	}
 
-	@Query(() => [TeacherType])
+	@Query(() => [Teacher])
 	async teachers(
 		@Arg('names') names: string,
-		@Ctx() { prisma, user }: Context
-	): Promise<TeacherType[]> {
-		const args: Prisma.FindManyTeacherArgs = {
+		@Ctx() { prisma }: APIContext
+	): Promise<Teacher[]> {
+		return prisma.teacher.findMany({
 			where: {
 				OR: [
 					{ name: { contains: names, mode: 'insensitive' } },
@@ -45,46 +25,6 @@ export default class TeacherResolver {
 				],
 			},
 			orderBy: [{ lastname: 'asc' }, { name: 'asc' }],
-		};
-		if (user.role !== UserRole.ADMIN) args.where.state = true;
-		return await prisma.teacher.findMany(args);
-	}
-
-	@Mutation(() => TeacherType)
-	async addTeacher(
-		@Arg('data') data: TeacherInput,
-		@Ctx() { prisma }: Context
-	): Promise<TeacherType> {
-		return await prisma.teacher.create({
-			data: {
-				name: data.name,
-				lastname: data.lastname,
-				state: data.state,
-			},
 		});
-	}
-
-	@Mutation(() => TeacherType)
-	async modifyTeacher(
-		@Arg('id', () => Int) id: number,
-		@Arg('data') data: TeacherInput,
-		@Ctx() { prisma }: Context
-	): Promise<TeacherType> {
-		return await prisma.teacher.update({
-			where: { id },
-			data: {
-				name: data.name,
-				lastname: data.lastname,
-				state: data.state,
-			},
-		});
-	}
-
-	@Mutation(() => TeacherType)
-	async deleteTeacher(
-		@Arg('id', () => Int) id: number,
-		@Ctx() { prisma }: Context
-	): Promise<TeacherType> {
-		return await prisma.teacher.delete({ where: { id } });
 	}
 }

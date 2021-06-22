@@ -1,72 +1,63 @@
-import {
-	Arg,
-	Ctx,
-	FieldResolver,
-	Mutation,
-	Query,
-	Resolver,
-	Root,
-} from 'type-graphql';
-import { Context } from '../../context';
-import CourseInput from '../inputs/Course.input';
-import CourseType from '../types/Course.type';
-import GroupType from '../types/Group.type';
-import SchoolType from '../types/School.type';
+import { Arg, Ctx, FieldResolver, Query, Resolver, Root } from 'type-graphql';
+import { APIContext } from '../../utils/context';
+import { Course } from '../models/Course';
+import { Group } from '../models/Group';
+import { SchoolCurriculum } from '../models/SchoolCurriculum';
 
-@Resolver(() => CourseType)
+@Resolver(Course)
 export default class CourseResolver {
-	@FieldResolver(() => SchoolType)
-	async school(
-		@Root() { code }: CourseType,
-		@Ctx() { prisma }: Context
-	): Promise<SchoolType> {
-		return await prisma.course.findUnique({ where: { code } }).school();
+	@FieldResolver(() => SchoolCurriculum)
+	async schoolCurriculum(
+		@Root() { code }: Course,
+		@Ctx() { prisma }: APIContext
+	): Promise<SchoolCurriculum> {
+		return prisma.course.findUnique({ where: { code } }).schoolCurriculum();
 	}
 
-	@FieldResolver(() => [GroupType])
+	@FieldResolver(() => [Group])
 	async groups(
-		@Root() { code }: CourseType,
-		@Ctx() { prisma }: Context
-	): Promise<GroupType[]> {
-		return await prisma.course.findUnique({ where: { code } }).groups();
+		@Root() { code }: Course,
+		@Ctx() { prisma }: APIContext
+	): Promise<Group[]> {
+		return prisma.course.findUnique({ where: { code } }).groups();
 	}
 
-	@FieldResolver(() => [CourseType])
+	@FieldResolver(() => [Course])
 	async coursePrerequisites(
-		@Root() { code }: CourseType,
-		@Ctx() { prisma }: Context
-	): Promise<CourseType[]> {
-		return await prisma.course
+		@Root() { code }: Course,
+		@Ctx() { prisma }: APIContext
+	): Promise<Course[]> {
+		return prisma.course
 			.findUnique({ where: { code } })
 			.coursePrerequisites({ orderBy: { name: 'asc' } });
 	}
 
-	@FieldResolver(() => [CourseType])
+	@FieldResolver(() => [Course])
 	async prerequisitesOf(
-		@Root() { code }: CourseType,
-		@Ctx() { prisma }: Context
-	): Promise<CourseType[]> {
-		return await prisma.course
+		@Root() { code }: Course,
+		@Ctx() { prisma }: APIContext
+	): Promise<Course[]> {
+		return prisma.course
 			.findUnique({ where: { code } })
 			.prerequisitesOf({ orderBy: { name: 'asc' } });
 	}
 
-	@Query(() => CourseType)
+	@Query(() => Course)
 	async course(
 		@Arg('code', { nullable: true }) code: string,
-		@Ctx() { prisma }: Context
-	): Promise<CourseType> {
-		return await prisma.course.findUnique({ where: { code } });
+		@Ctx() { prisma }: APIContext
+	): Promise<Course> {
+		return prisma.course.findUnique({ where: { code } });
 	}
 
-	@Query(() => [CourseType])
+	@Query(() => [Course])
 	async courses(
 		@Arg('name', { nullable: true }) name: string,
 		@Arg('academicPhase', { nullable: true }) academicPhase: number,
 		@Arg('school', { nullable: true }) schoolId: number,
-		@Ctx() { prisma }: Context
-	): Promise<CourseType[]> {
-		return await prisma.course.findMany({
+		@Ctx() { prisma }: APIContext
+	): Promise<Course[]> {
+		return prisma.course.findMany({
 			where: {
 				name: { contains: name, mode: 'insensitive' },
 				academicPhase,
@@ -74,52 +65,5 @@ export default class CourseResolver {
 			},
 			orderBy: { name: 'asc' },
 		});
-	}
-
-	@Mutation(() => CourseType)
-	async addCourse(
-		@Arg('data') data: CourseInput,
-		@Ctx() { prisma }: Context
-	): Promise<CourseType> {
-		return await prisma.course.create({
-			data: {
-				code: data.code,
-				name: data.name,
-				credits: data.credits,
-				academicPhase: data.academicPhase,
-				state: data.state,
-				school: { connect: { id: data.schoolId } },
-				coursePrerequisites: {
-					connect: data.prerequisites?.map((c) => ({
-						code: c,
-					})),
-				},
-			},
-		});
-	}
-
-	@Mutation(() => CourseType)
-	async modifyCourse(
-		@Arg('code') code: string,
-		@Arg('data') data: CourseInput,
-		@Ctx() { prisma }: Context
-	): Promise<CourseType> {
-		return await prisma.course.update({
-			where: { code },
-			data: {
-				name: data.name,
-				credits: data.credits,
-				academicPhase: data.academicPhase,
-				state: data.state,
-			},
-		});
-	}
-
-	@Mutation(() => CourseType)
-	async deleteCourse(
-		@Arg('code') code: string,
-		@Ctx() { prisma }: Context
-	): Promise<CourseType> {
-		return await prisma.course.delete({ where: { code } });
 	}
 }

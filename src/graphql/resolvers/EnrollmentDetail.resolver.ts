@@ -3,100 +3,55 @@ import {
 	Ctx,
 	FieldResolver,
 	Int,
-	Mutation,
 	Query,
 	Resolver,
 	Root,
 } from 'type-graphql';
-import { Context } from '../../context';
-import EnrollmentDetailInput from '../inputs/EnrollmentDetail.input';
-import EnrollmentType from '../types/Enrollment.type';
-import EnrollmentDetailType from '../types/EnrollmentDetail.type';
-import GradeType from '../types/Grade.type';
-import GroupType from '../types/Group.type';
+import { APIContext } from '../../utils/context';
+import { Enrollment } from '../models/Enrollment';
+import { EnrollmentDetail } from '../models/EnrollmentDetail';
+import { Grade } from '../models/Grade';
+import { Group } from '../models/Group';
 
-@Resolver(() => EnrollmentDetailType)
+@Resolver(() => EnrollmentDetail)
 export default class EnrollmentDetailResolver {
-	@FieldResolver(() => EnrollmentType)
+	@FieldResolver(() => Enrollment)
 	async enrollment(
-		@Root() { id }: EnrollmentDetailType,
-		@Ctx() { prisma }: Context
-	): Promise<EnrollmentType> {
-		return await prisma.enrollmentDetail
-			.findUnique({ where: { id } })
-			.enrollment();
+		@Root() { id }: EnrollmentDetail,
+		@Ctx() { prisma }: APIContext
+	): Promise<Enrollment> {
+		return prisma.enrollmentDetail.findUnique({ where: { id } }).enrollment();
 	}
 
-	@FieldResolver(() => GroupType)
+	@FieldResolver(() => Group)
 	async group(
-		@Root() { id }: EnrollmentDetailType,
-		@Ctx() { prisma }: Context
-	): Promise<GroupType> {
-		return await prisma.enrollmentDetail
-			.findUnique({ where: { id } })
-			.group();
+		@Root() { id }: EnrollmentDetail,
+		@Ctx() { prisma }: APIContext
+	): Promise<Group> {
+		return prisma.enrollmentDetail.findUnique({ where: { id } }).group();
 	}
 
-	@FieldResolver(() => [GradeType])
+	@FieldResolver(() => [Grade])
 	async grades(
-		@Root() { id }: EnrollmentDetailType,
-		@Ctx() { prisma }: Context
-	): Promise<GradeType[]> {
-		return await prisma.enrollmentDetail
-			.findUnique({ where: { id } })
-			.grades();
+		@Root() { id }: EnrollmentDetail,
+		@Ctx() { prisma }: APIContext
+	): Promise<Grade[]> {
+		return prisma.enrollmentDetail.findUnique({ where: { id } }).grades();
 	}
 
-	@Query(() => EnrollmentDetailType)
+	@Query(() => EnrollmentDetail)
 	async enrollmentDetail(
 		@Arg('id', () => Int) id: number,
-		@Ctx() { prisma }: Context
-	): Promise<EnrollmentDetailType> {
-		return await prisma.enrollmentDetail.findUnique({ where: { id } });
+		@Ctx() { prisma }: APIContext
+	): Promise<EnrollmentDetail> {
+		return prisma.enrollmentDetail.findUnique({ where: { id } });
 	}
 
-	@Query(() => [EnrollmentDetailType])
+	@Query(() => [EnrollmentDetail])
 	async enrollmentDetails(
-		@Ctx() { prisma }: Context
-	): Promise<EnrollmentDetailType[]> {
-		return await prisma.enrollmentDetail.findMany();
-	}
-
-	@Mutation(() => EnrollmentDetailType)
-	async addEnrollmentDetail(
-		@Arg('data') data: EnrollmentDetailInput,
-		@Ctx() { prisma }: Context
-	): Promise<EnrollmentDetailType> {
-		return await prisma.enrollmentDetail.create({
-			data: {
-				enrollment: { connect: { id: data.enrollmentId } },
-				group: { connect: { id: data.groupId } },
-			},
-		});
-	}
-
-	@Mutation(() => EnrollmentDetailType)
-	async modifyEnrollmentDetail(
-		@Arg('id', () => Int) id: number,
-		@Arg('data') data: EnrollmentDetailInput,
-		@Ctx() { prisma }: Context
-	): Promise<EnrollmentDetailType> {
-		return await prisma.enrollmentDetail.update({
-			where: { id },
-			data: {
-				averageGrade: data.averageGrade,
-				state: data.state,
-			},
-		});
-	}
-
-	@Mutation(() => EnrollmentDetailType)
-	async deleteEnrollmentDetail(
-		@Arg('id', () => Int) id: number,
-		@Ctx() { prisma }: Context
-	): Promise<EnrollmentDetailType> {
-		return await prisma.enrollmentDetail.delete({
-			where: { id },
-		});
+		@Arg('enrollmentId', () => Int) enrollmentId: number,
+		@Ctx() { prisma }: APIContext
+	): Promise<EnrollmentDetail[]> {
+		return prisma.enrollmentDetail.findMany({ where: { enrollmentId } });
 	}
 }

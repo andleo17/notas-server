@@ -1,78 +1,36 @@
-import { AuthenticationError } from 'apollo-server';
 import {
 	Arg,
 	Ctx,
 	FieldResolver,
 	Int,
-	Mutation,
 	Query,
 	Resolver,
 	Root,
 } from 'type-graphql';
-import { Context, UserRole } from '../../context';
-import { NO_ADMIN } from '../../utils/errors';
-import TypeActivityInput from '../inputs/TypeActivity.input';
-import ActivityType from '../types/Activity.type';
-import TypeActivityType from '../types/TypeActivity.type';
+import { APIContext } from '../../utils/context';
+import { Activity } from '../models/Activity';
+import { TypeActivity } from '../models/TypeActivity';
 
-@Resolver(() => TypeActivityType)
+@Resolver(() => TypeActivity)
 export default class TypeActivityResolver {
-	@FieldResolver(() => [ActivityType])
+	@FieldResolver(() => [Activity])
 	async activities(
-		@Root() { id }: TypeActivityType,
-		@Ctx() { prisma }: Context
-	): Promise<ActivityType[]> {
-		return await prisma.typeActivity
-			.findUnique({ where: { id } })
-			.activities();
+		@Root() { id }: TypeActivity,
+		@Ctx() { prisma }: APIContext
+	): Promise<Activity[]> {
+		return await prisma.typeActivity.findUnique({ where: { id } }).activities();
 	}
 
-	@Query(() => TypeActivityType)
+	@Query(() => TypeActivity)
 	async typeActivity(
 		@Arg('id', () => Int) id: number,
-		@Ctx() { prisma }: Context
-	): Promise<TypeActivityType> {
+		@Ctx() { prisma }: APIContext
+	): Promise<TypeActivity> {
 		return await prisma.typeActivity.findUnique({ where: { id } });
 	}
 
-	@Query(() => [TypeActivityType])
-	async typesActivity(
-		@Ctx() { prisma }: Context
-	): Promise<TypeActivityType[]> {
+	@Query(() => [TypeActivity])
+	async typesActivity(@Ctx() { prisma }: APIContext): Promise<TypeActivity[]> {
 		return await prisma.typeActivity.findMany({ orderBy: { name: 'asc' } });
-	}
-
-	@Mutation(() => TypeActivityType)
-	async addTypeActivity(
-		@Arg('data') data: TypeActivityInput,
-		@Ctx() { prisma, user }: Context
-	): Promise<TypeActivityType> {
-		if (user.role !== UserRole.ADMIN)
-			throw new AuthenticationError(NO_ADMIN);
-		return await prisma.typeActivity.create({ data: { name: data.name } });
-	}
-
-	@Mutation(() => TypeActivityType)
-	async modifyTypeActivity(
-		@Arg('id', () => Int) id: number,
-		@Arg('data') data: TypeActivityInput,
-		@Ctx() { prisma, user }: Context
-	): Promise<TypeActivityType> {
-		if (user.role !== UserRole.ADMIN)
-			throw new AuthenticationError(NO_ADMIN);
-		return await prisma.typeActivity.update({
-			where: { id },
-			data: { name: data.name },
-		});
-	}
-
-	@Mutation(() => TypeActivityType)
-	async deleteTypeActivity(
-		@Arg('id', () => Int) id: number,
-		@Ctx() { prisma, user }: Context
-	): Promise<TypeActivityType> {
-		if (user.role !== UserRole.ADMIN)
-			throw new AuthenticationError(NO_ADMIN);
-		return await prisma.typeActivity.delete({ where: { id } });
 	}
 }
